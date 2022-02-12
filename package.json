@@ -1,0 +1,23 @@
+{
+  "name": "third-year-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/foster-luke/third-year-project.git"
+  },
+  "author": "Luke Foster",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/foster-luke/third-year-project/issues"
+  },
+  "homepage": "https://github.com/foster-luke/third-year-project#readme",
+  "devDependencies": {
+    "electron": "^17.0.0"
+  }
+}
