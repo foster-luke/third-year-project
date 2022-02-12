@@ -28,6 +28,8 @@
     "electron": "^17.0.0"
   },
   "dependencies": {
+    "@tensorflow/tfjs": "^3.13.0",
+    "@tensorflow/tfjs-node": "^3.13.0",
     "electron-squirrel-startup": "^1.0.0"
   },
   "config": {

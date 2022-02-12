@@ -4,3 +4,7 @@
 // `nodeIntegration` is turned off. Use `preload.js` to
 // selectively enable features needed in the rendering
 // process.
+document.getElementById('train-model').addEventListener('click', async () => {
+    const res = await window.model.train()
+    document.getElementById('model-res').innerHTML = res
+})
