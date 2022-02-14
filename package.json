@@ -4,7 +4,7 @@
   "description": "Podcast sponsored section detector",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx playwright test",
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make"
@@ -25,7 +25,9 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.63",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
     "@electron-forge/maker-zip": "^6.0.0-beta.63",
-    "electron": "^17.0.0"
+    "@playwright/test": "^1.19.0",
+    "electron": "^17.0.0",
+    "playwright": "^1.19.0"
   },
   "dependencies": {
     "@tensorflow/tfjs": "^3.13.0",
