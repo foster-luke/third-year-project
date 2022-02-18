@@ -9,7 +9,8 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\""
+    "lint": "echo \"No linting configured\"",
+    "test": "NODE_ENV=test jest"
   },
   "keywords": [],
   "author": {
@@ -71,6 +72,7 @@
     "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
     "@electron-forge/maker-zip": "^6.0.0-beta.63",
     "@electron-forge/plugin-webpack": "^6.0.0-beta.63",
+    "@testing-library/react": "^12.1.3",
     "@vercel/webpack-asset-relocator-loader": "^1.7.0",
     "babel-loader": "^8.2.3",
     "css-loader": "^6.6.0",
@@ -79,12 +81,17 @@
     "style-loader": "^3.3.1"
   },
   "dependencies": {
+    "@babel/preset-env": "^7.16.11",
     "@tensorflow/tfjs": "^3.13.0",
+    "@testing-library/jest-dom": "^5.16.2",
+    "babel-jest": "^27.5.1",
     "bootstrap": "^5.1.3",
     "electron-squirrel-startup": "^1.0.0",
+    "jest": "^27.5.1",
     "jquery": "^3.6.0",
     "popper.js": "^1.16.1",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-test-renderer": "^17.0.2"
   }
 }

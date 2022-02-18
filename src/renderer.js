@@ -26,9 +26,15 @@
  * ```
  */
 
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './app.jsx';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 
-console.log('👋 This message is being logged by "renderer.js", included via webpack');
-
-// Add this to the end of the existing file
-import './app.jsx';
+ReactDOM.render(
+    <React.StrictMode>
+        <App />
+    </React.StrictMode>,
+    document.getElementById('root')
+);
