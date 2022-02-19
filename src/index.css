@@ -2,6 +2,79 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif;
   margin: auto;
-  max-width: 38rem;
-  padding: 2rem;
+}
+
+.mediaControls {
+    background-color: #363636;
+    height: 100px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    color: #fff;
+    align-content: center;
+}
+
+.mediaControlButton {
+    color: #000;
+    border: 1px solid #363636;
+    background: #C4C4C4;
+    transition: 0.15s;
+    border-radius: 100%;
+    margin: 0 0.2em;
+    font-size: 1.5em;
+}
+
+.mediaControlButton:hover {
+    color: #fff;
+    border: 1px solid #fff;
+    background: #363636;
+    border-radius: 100%;
+    transition: 0.15s;
+}
+
+.volumeControls {
+    align-items: center;
+    height: 100%;
+    font-size: 1.6em;
+}
+
+.playbackProgress {
+    align-items: center;
+}
+
+#volumeMuteButton {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    color: #fff;
+    padding: 0;
+    transition: 0.1s;
+    z-index: 99;
+}
+
+#volumeMuteButton:hover {
+    color: #C4C4C4;
+    transition: 0.1s;
+    border: none;
+    background: none;
+    box-shadow: none;
+}
+
+#volumeMuteButton:active,
+#volumeMuteButton:focus {
+    transition: 0.1s;
+    border: none;
+    background: none;
+    box-shadow: none;
+}
+
+.slider .progress {
+    cursor: pointer;
+    background-color: #B5B5B5;
+    height: 0.4em;
+}
+
+.slider .progress .progress-bar {
+    transition: none;
+    background-color: #fff;
 }

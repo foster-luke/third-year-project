@@ -1,4 +1,5 @@
 import * as React from 'react';
+import MediaControls from './components/MediaControls/MediaControls';
 import TensorFlow from './components/TensorFlow/TensorFlow'
 
 class App extends React.Component {
@@ -20,6 +21,7 @@ class App extends React.Component {
                         </div>
                     </div>
                 </div>
+                <MediaControls />
             </>
         )
     }
