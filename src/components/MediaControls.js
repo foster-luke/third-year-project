@@ -92,7 +92,7 @@ function VolumeControls(props) {
     return (
         <div className="row volumeControls">
             <div className="col-2">
-                <button id="volumeMuteButton" className="btn" onClick={props.handleVolumeMute}>
+                <button id="volumeMuteButton" className="btn btnIcon" onClick={props.handleVolumeMute}>
                     {volumeIcon}
                 </button>
             </div>

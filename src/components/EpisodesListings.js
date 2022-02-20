@@ -1,6 +1,6 @@
 import React from 'react';
 
-class MediaControls extends React.Component {
+class EpisodesListings extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -36,10 +36,70 @@ class MediaControls extends React.Component {
     }
 
     render() {
-        return <>
-            
-        </>
+
+        // Build the episodes view
+        let episodes = <div id="Episodes">
+            <div className="row" id="episodesListingsHeader">
+                <div className="col-1">
+                    #
+                </div>
+                <div className="col-4">
+                    Episode Name
+                </div>
+                <div className="col-2 text-center">
+                    Length
+                </div>
+                <div className="col-2 text-center">
+                    Analysed
+                </div>
+                <div className="col-2 text-center">
+                    Trimmed
+                </div>
+            </div>
+            {this.state.episodes.map(episode => {
+                return <EpisodeListing episode={episode} key={episode.number}/>;
+            })}
+        </div>;
+
+        return <div id="episodesListings">
+            <div className="row" id="podcastHeader">
+                <div className="col-6" id="podcastName">
+                    {this.state.podcast.name}
+                </div>
+                <div className="col-6" id="podcastDetails">
+                    Genre: {this.state.podcast.genre} <br />
+                    Hosts: {this.state.podcast.hosts} <br />
+                </div>
+            </div>
+            {episodes}
+        </div>
     }
 }
 
-export default MediaControls;
+function EpisodeListing(props) {
+    // Return a single episode row
+    return <div className="row">
+        <div className="col-1">
+            {props.episode.number}.
+        </div>
+        <div className="col-4">
+            {props.episode.name}
+        </div>
+        <div className="col-2 text-center">
+            {props.episode.length}
+        </div>
+        <div className="col-2 text-center">
+            {props.episode.analysed ? <i className="bi bi-check-lg"></i> : <i className="bi bi-x-lg"></i>}
+        </div>
+        <div className="col-2 text-center">
+            {props.episode.ads_removed ? <i className="bi bi-check-lg"></i> : <i className="bi bi-x-lg"></i>}
+        </div>
+        <div className="col-1 text-center">
+            <button className="btn btnIcon">
+                <i className="bi bi-three-dots"></i>
+            </button>
+        </div>
+    </div>
+}
+
+export default EpisodesListings;

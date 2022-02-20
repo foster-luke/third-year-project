@@ -1,4 +1,5 @@
 import React from 'react';
+import EpisodesListings from './EpisodesListings';
 
 class MainSection extends React.Component {
     constructor(props) {
@@ -8,11 +9,7 @@ class MainSection extends React.Component {
 
     render() {
         return <div id="mainSection" className="container-fluid">
-            <div className="row">
-                <div className="col">
-                    Main Section
-                </div>
-            </div>
+            <EpisodesListings />
         </div>
     }
 }
