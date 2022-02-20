@@ -2,6 +2,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif;
   margin: auto;
+  color:#fff;
 }
 
 .mediaControls {
@@ -77,4 +78,14 @@ body {
 .slider .progress .progress-bar {
     transition: none;
     background-color: #fff;
+}
+
+#sideBar {
+    background-color: #363636;
+    height:500px;
+}
+
+#mainSection {
+    background-color: #575757;
+    height:500px;
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import Slider from '../Slider/Slider';
+import Slider from './Slider';
 
 class MediaControls extends React.Component {
     constructor(props) {
@@ -48,7 +48,7 @@ class MediaControls extends React.Component {
 
     render() {
         return <>
-            <div className='container-fluid text-center'>
+            <div className='text-center'>
                 <div className='row mediaControls'>
                     <div className='col-3 currentlyPlaying'>
                         Currently Playing: <br/>
