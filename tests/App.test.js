@@ -12,8 +12,4 @@ describe('App', () => {
     test('renders App component', () => {
         render(<App />);
     });
-    test('sees welcome text', () => {
-        render(<App />);
-        expect(screen.getByText("Hello from React!")).toBeInTheDocument();
-    });
 });
