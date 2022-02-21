@@ -5,6 +5,13 @@ import SideBar from './components/SideBar';
 import TensorFlow from './components/TensorFlow'
 
 class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            displayedSection: "EpisodeUpload"
+        }
+    }
+
     render() {
         return (
             <div className="container-fluid">
@@ -13,7 +20,7 @@ class App extends React.Component {
                         <SideBar />
                     </div>
                     <div className="col-9 p-0">
-                        <MainSection />
+                        <MainSection displayedSection={this.state.displayedSection}/>
                     </div>
                 </div>
                 <MediaControls />

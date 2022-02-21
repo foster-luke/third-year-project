@@ -38,7 +38,7 @@ class EpisodesListings extends React.Component {
     render() {
 
         // Build the episodes view
-        let episodes = <div id="Episodes">
+        let episodes = <div id="episodes">
             <div className="row" id="episodesListingsHeader">
                 <div className="col-1">
                     #
