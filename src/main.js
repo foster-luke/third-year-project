@@ -1,5 +1,9 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const fs = require('fs')
+const fsPromises = require('fs').promises;
+
+let mainWindow;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -9,11 +13,14 @@ if (require('electron-squirrel-startup')) {
 
 const createWindow = () => {
     // Create the browser window.
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 1400,
         height: 628,
         resizable: false,
         autoHideMenuBar: true,
+        "webPreferences": {
+            preload: path.join(__dirname, 'preload.js')
+        }
     });
 
     // and load the index.html of the app.
@@ -47,3 +54,16 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+
+ipcMain.handle('uploadFile', async (event, filePath) => {
+    newPath = "./assets/podcasts/" + path.basename(filePath);
+    const result = await fsPromises.copyFile(filePath, newPath, fs.constants.COPYFILE_EXCL)
+    .then(function () {
+        return true
+    })
+    .catch(function (error) {
+        return false
+    });
+
+    return result;
+})
