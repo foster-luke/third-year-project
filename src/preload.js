@@ -9,3 +9,11 @@ contextBridge.exposeInMainWorld('electron', {
         });
     }
 })
+
+contextBridge.exposeInMainWorld('mediaControls', {
+    getPodcast: (filePath) => {
+        return ipcRenderer.invoke('getPodcast', filePath).then((result) => {
+            return result;
+        });
+    }
+})

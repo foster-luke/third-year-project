@@ -1,25 +1,66 @@
 import React from 'react';
 import Slider from './Slider';
+import { Howl, Howler } from 'howler';
 
 class MediaControls extends React.Component {
     constructor(props) {
         super(props);
-
+        let trackTime;
         this.handlePlaybackPositionChange = this.handlePlaybackPositionChange.bind(this);
         this.handleVolumeChange = this.handleVolumeChange.bind(this);
         this.handleVolumeMute = this.handleVolumeMute.bind(this);
         this.handlePlayPauseClick = this.handlePlayPauseClick.bind(this);
+        this.updateDuration = this.updateDuration.bind(this);
+        this.handleSkipBackwardButtonClick = this.handleSkipBackwardButtonClick.bind(this);
+        this.handleSkipForwardButtonClick = this.handleSkipForwardButtonClick.bind(this);
 
+        const filePath = "./assets/podcasts/example.mp3";
         this.state = {
             currentlyPlaying: {
                 podcastName: "Lorem Ipsum",
                 episodeName: "Episode 123: Dolor Est",
-                length: 25.25,
-                playbackPosition:  4
+                length: 0,
+                filePath: filePath,
+                playbackPosition: 0,
+                sound: null,
             },
-            volume: 0.2,
+            volume: 1,
             playing: false
         }
+    }
+    
+    componentDidMount() {
+        this.getCurrentlyPlayingFile(this.state.currentlyPlaying.filePath)
+    }
+
+    // Get the currently selected podcast file from storage
+    async getCurrentlyPlayingFile(filePath) {
+        let blob = await window.mediaControls.getPodcast(filePath);
+        let sound = await new Howl({
+            src: ["data:audio/mp3;base64," + blob],
+            html5: true,
+            format: "mp3"
+        })
+        // Get the podcast duration once it has loaded
+        sound.once("load", (sound, updateDuration) =>this.updateDuration(this.state.currentlyPlaying.sound));
+    
+        // Save the audio object to the state so it can be played
+        this.setState(prevState => {
+            let currentlyPlaying = { ...prevState.currentlyPlaying };
+            currentlyPlaying.sound = sound;
+            return { currentlyPlaying };
+        });
+        
+        return sound;
+    }
+
+    // Update the duration of the podcast in state
+    async updateDuration(sound) {
+        this.setState(prevState => {
+            let currentlyPlaying = { ...prevState.currentlyPlaying };
+            currentlyPlaying.length = sound.duration() / 60;
+            return { currentlyPlaying };
+        });
     }
 
     handlePlaybackPositionChange(playbackPosition) {
@@ -31,15 +72,49 @@ class MediaControls extends React.Component {
             currentlyPlaying.playbackPosition = playbackPosition;
             return { currentlyPlaying };
         });
+        this.state.currentlyPlaying.sound.seek(playbackPosition * 60)
+    }
+
+    // Move the playback backwards by 1 minute
+    handleSkipBackwardButtonClick() {
+        let playbackPosition = this.state.currentlyPlaying.playbackPosition - 1
+        this.state.currentlyPlaying.sound.seek(playbackPosition * 60)
+    }
+
+    // Move the playback forwards by 1 minute
+    handleSkipForwardButtonClick() {
+        let playbackPosition = this.state.currentlyPlaying.playbackPosition + 1
+        this.state.currentlyPlaying.sound.seek(playbackPosition * 60)
     }
 
     handleVolumeChange(volume) {
         volume = volume / 100;
-        this.setState({volume: volume});
+        this.state.currentlyPlaying.sound.volume(volume);
+        this.setState({ volume: volume });
     }
 
-    handlePlayPauseClick() {
-        this.setState({playing: !this.state.playing});
+    // Track the current position in the playback
+    startPlaybackTimer() {
+        this.trackTime = setInterval(() => {            
+            this.setState(prevState => {
+                let currentlyPlaying = { ...prevState.currentlyPlaying };
+                currentlyPlaying.playbackPosition = this.state.currentlyPlaying.sound.seek() / 60;
+                return { currentlyPlaying };
+            });
+        }, 1000);
+    }
+
+    async handlePlayPauseClick() {
+        let playing = !this.state.playing
+        this.setState({ playing: playing });
+        if (playing) { 
+            this.state.currentlyPlaying.sound.play();
+            this.startPlaybackTimer();
+        }
+        else {
+            this.state.currentlyPlaying.sound.pause();
+            clearInterval(this.trackTime)
+        }
     }
 
     handleVolumeMute() {
@@ -58,11 +133,11 @@ class MediaControls extends React.Component {
                     <div className='col-6'>
                         <div className='row'>
                             <div className='col-12'>
-                                <button className="mediaControlButton">
+                                <button className="mediaControlButton" onClick={this.handleSkipBackwardButtonClick}>
                                     <i className="bi bi-skip-backward"></i>
                                 </button>
                                 <PlayPauseButton playing={this.state.playing} handlePlayPauseClick={this.handlePlayPauseClick} />
-                                <button className="mediaControlButton">
+                                <button className="mediaControlButton" onClick={this.handleSkipForwardButtonClick}>
                                     <i className="bi bi-skip-forward"></i>
                                 </button>
                             </div>

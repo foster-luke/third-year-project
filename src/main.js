@@ -67,3 +67,17 @@ ipcMain.handle('uploadFile', async (event, filePath) => {
 
     return result;
 })
+
+ipcMain.handle('getPodcast', async (event, filePath) => {
+    const result = await fsPromises.readFile(filePath, {
+        encoding: 'base64'
+    })
+    .then(function (result) {
+        return result;
+    })
+    .catch(function (error) {
+        return false
+    });
+    
+    return result;
+})
