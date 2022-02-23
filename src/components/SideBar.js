@@ -1,20 +1,29 @@
 import React from 'react';
 
+/**
+ * Sidebar component
+ */
 class SideBar extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {}
-    }
+  /**
+   * @param {*} props
+   */
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-    render() {
-        return <div id="sideBar" className="container-fluid">
-            <div className="row">
-                <div className="col">
+  /**
+   * @return {string}
+   */
+  render() {
+    return <div id="sideBar" className="container-fluid">
+      <div className="row">
+        <div className="col">
                     Side Bar
-                </div>
-            </div>
         </div>
-    }
+      </div>
+    </div>;
+  }
 }
 
 export default SideBar;

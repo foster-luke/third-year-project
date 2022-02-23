@@ -1,33 +1,33 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
-const fs = require('fs')
+const fs = require('fs');
 const fsPromises = require('fs').promises;
 
 let mainWindow;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
-    // eslint-disable-line global-require
-    app.quit();
+  // eslint-disable-line global-require
+  app.quit();
 }
 
 const createWindow = () => {
-    // Create the browser window.
-    mainWindow = new BrowserWindow({
-        width: 1400,
-        height: 628,
-        resizable: false,
-        autoHideMenuBar: true,
-        "webPreferences": {
-            preload: path.join(__dirname, 'preload.js')
-        }
-    });
+  // Create the browser window.
+  mainWindow = new BrowserWindow({
+    'width': 1400,
+    'height': 628,
+    'resizable': false,
+    'autoHideMenuBar': true,
+    'webPreferences': {
+      preload: path.join(__dirname, 'preload.js'),
+    },
+  });
 
-    // and load the index.html of the app.
-    mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  // and load the index.html of the app.
+  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-    // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+  // Open the DevTools.
+  mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -39,45 +39,46 @@ app.on('ready', createWindow);
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
 });
 
 app.on('activate', () => {
-    // On OS X it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow();
-    }
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
 });
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
 ipcMain.handle('uploadFile', async (event, filePath) => {
-    newPath = "./assets/podcasts/" + path.basename(filePath);
-    const result = await fsPromises.copyFile(filePath, newPath, fs.constants.COPYFILE_EXCL)
-    .then(function () {
-        return true
-    })
-    .catch(function (error) {
-        return false
-    });
+  newPath = './assets/podcasts/' + path.basename(filePath);
+  const result =
+    await fsPromises.copyFile(filePath, newPath, fs.constants.COPYFILE_EXCL)
+        .then(function() {
+          return true;
+        })
+        .catch(function(error) {
+          return false;
+        });
 
-    return result;
-})
+  return result;
+});
 
 ipcMain.handle('getPodcast', async (event, filePath) => {
-    const result = await fsPromises.readFile(filePath, {
-        encoding: 'base64'
-    })
-    .then(function (result) {
+  const result = await fsPromises.readFile(filePath, {
+    encoding: 'base64',
+  })
+      .then(function(result) {
         return result;
-    })
-    .catch(function (error) {
-        return false
-    });
-    
-    return result;
-})
+      })
+      .catch(function(error) {
+        return false;
+      });
+
+  return result;
+});
