@@ -12,6 +12,11 @@
     "lint": "echo \"No linting configured\"",
     "test": "NODE_ENV=test jest"
   },
+  "build": {
+    "extraFiles": [
+      "assets/podcasts"
+    ]
+  },
   "keywords": [],
   "author": {
     "name": "Luke Foster",

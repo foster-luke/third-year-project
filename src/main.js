@@ -56,13 +56,21 @@ app.on('activate', () => {
 // code. You can also put them in separate files and import them here.
 
 ipcMain.handle('uploadFile', async (event, filePath) => {
-  newPath = './assets/podcasts/' + path.basename(filePath);
+  const dir = './assets/podcasts/';
+  newPath = dir + path.basename(filePath);
+
+  // If the location does not exist then create it
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, {recursive: true});
+  }
+
   const result =
     await fsPromises.copyFile(filePath, newPath, fs.constants.COPYFILE_EXCL)
         .then(function() {
           return true;
         })
         .catch(function(error) {
+          throw error;
           return false;
         });
 
