@@ -134,6 +134,26 @@ ipcMain.handle('getPodcastInfoDataFile', async (event) => {
   return result;
 });
 
+
+// Update podcast info data file
+ipcMain.handle('updatePodcastInfoDataFile', async (event, newData) => {
+  const filePath = './data/podcast_info.json';
+  console.log(newData);
+  // Write the new data to the file
+  const result = await fsPromises.writeFile(filePath, newData, {
+    encoding: 'utf8',
+  })
+      .then(function(result) {
+        console.log(result);
+        return result;
+      })
+      .catch(function(error) {
+        throw error;
+      });
+
+  return result;
+});
+
 ipcMain.handle('getPodcast', async (event, filePath) => {
   const result = await fsPromises.readFile(filePath, {
     encoding: 'base64',

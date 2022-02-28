@@ -78,7 +78,7 @@ class EpisodeDetails extends React.Component {
    * Podcast details form submission
    * @param {*} e
    */
-  handlePodcastFormSubmit(e) {
+  async handlePodcastFormSubmit(e) {
     e.preventDefault();
     const slug = this.slugify(this.state.podcastName);
     const podcasts = this.state.storedPodcasts;
@@ -88,9 +88,7 @@ class EpisodeDetails extends React.Component {
       hosts: this.state.podcastHosts,
       genre: this.state.podcastGenre,
     });
-
-    console.log(podcasts);
-
+    await window.podcastStorage.updatePodcastInfoDataFile(podcasts);
     this.setState({
       storedPodcasts: podcasts,
       selectedPodcastSlug: slug,

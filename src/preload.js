@@ -20,6 +20,13 @@ contextBridge.exposeInMainWorld('podcastStorage', {
           return result;
         });
   },
+  updatePodcastInfoDataFile: async (newData) => {
+    return ipcRenderer
+        .invoke('updatePodcastInfoDataFile', JSON.stringify(newData))
+        .then((result) => {
+          return result;
+        });
+  },
 });
 
 contextBridge.exposeInMainWorld('mediaControls', {
