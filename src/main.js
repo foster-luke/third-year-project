@@ -107,6 +107,33 @@ ipcMain.handle('moveTempPodcastToStorage',
       return result;
     });
 
+// Get podcast info data file contents
+ipcMain.handle('getPodcastInfoDataFile', async (event) => {
+  const dir = './data/';
+  const filePath = dir + 'podcast_info.json';
+
+  // If the data file does not exist then create it
+  if (!fs.existsSync(filePath)) {
+    fs.mkdirSync(dir, {recursive: true});
+    return await fsPromises.writeFile(filePath, '[]').then(function() {
+      return [];
+    });
+  }
+
+  // Read the file and return it as JSON
+  const result = await fsPromises.readFile(filePath, {
+    encoding: 'utf8',
+  })
+      .then(function(result) {
+        return JSON.parse(result);
+      })
+      .catch(function(error) {
+        return false;
+      });
+
+  return result;
+});
+
 ipcMain.handle('getPodcast', async (event, filePath) => {
   const result = await fsPromises.readFile(filePath, {
     encoding: 'base64',

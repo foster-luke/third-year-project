@@ -13,6 +13,13 @@ contextBridge.exposeInMainWorld('podcastStorage', {
           return result;
         });
   },
+  getPodcastInfoDataFile: async () => {
+    return ipcRenderer
+        .invoke('getPodcastInfoDataFile')
+        .then((result) => {
+          return result;
+        });
+  },
 });
 
 contextBridge.exposeInMainWorld('mediaControls', {

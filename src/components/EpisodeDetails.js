@@ -17,7 +17,7 @@ class EpisodeDetails extends React.Component {
       episodeNumber: '',
       episodeName: '',
       selectedPodcastSlug: '',
-      storedPodcasts: this.getStoredPodcasts(),
+      storedPodcasts: [],
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleEpisodeFormSubmit = this.handleEpisodeFormSubmit.bind(this);
@@ -27,30 +27,26 @@ class EpisodeDetails extends React.Component {
   }
 
   /**
+   *
+   */
+  async componentDidMount() {
+    const storedPodcasts =
+      await this.getStoredPodcasts().then(function(result) {
+        return result;
+      });
+    this.setState({
+      storedPodcasts: storedPodcasts,
+    });
+  }
+
+  /**
    * Get all podcasts that are currently stored in the file system
    * @return {JSON}
    */
-  getStoredPodcasts() {
-    return [
-      {
-        name: 'My Brother, My Brother & Me',
-        slug: 'my_brother_my_brother_me',
-        hosts: 'Justin, Travis and Griffin McElroy',
-        genre: 'Comedy',
-      },
-      {
-        name: 'Sawbones',
-        slug: 'sawbones',
-        hosts: 'Justin and Sydney McElroy',
-        genre: 'Comedy',
-      },
-      {
-        name: 'Fake Doctors, Real Friends',
-        slug: 'fake_doctors_real_friends',
-        hosts: 'Donald Faison & Zach Braff',
-        genre: 'Comedy',
-      },
-    ];
+  async getStoredPodcasts() {
+    const result =
+      await window.podcastStorage.getPodcastInfoDataFile();
+    return result;
   }
 
   /**
