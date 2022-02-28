@@ -138,13 +138,11 @@ ipcMain.handle('getPodcastInfoDataFile', async (event) => {
 // Update podcast info data file
 ipcMain.handle('updatePodcastInfoDataFile', async (event, newData) => {
   const filePath = './data/podcast_info.json';
-  console.log(newData);
   // Write the new data to the file
   const result = await fsPromises.writeFile(filePath, newData, {
     encoding: 'utf8',
   })
       .then(function(result) {
-        console.log(result);
         return result;
       })
       .catch(function(error) {
