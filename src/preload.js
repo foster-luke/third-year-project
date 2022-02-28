@@ -1,15 +1,22 @@
 const {contextBridge, ipcRenderer} = require('electron');
-contextBridge.exposeInMainWorld('electron', {
-  uploadFile: (filePath) => {
-    // ipcRenderer.send('uploadFile', filePath);
-    return ipcRenderer.invoke('uploadFile', filePath).then((result) => {
+
+contextBridge.exposeInMainWorld('podcastStorage', {
+  uploadFileToTemp: async (filePath) => {
+    return ipcRenderer.invoke('uploadFileToTemp', filePath).then((result) => {
       return result;
     });
+  },
+  moveToPermStorage: async (permFileName, tmpFileName) => {
+    return ipcRenderer
+        .invoke('moveTempPodcastToStorage', permFileName, tmpFileName)
+        .then((result) => {
+          return result;
+        });
   },
 });
 
 contextBridge.exposeInMainWorld('mediaControls', {
-  getPodcast: (filePath) => {
+  getPodcast: async (filePath) => {
     return ipcRenderer.invoke('getPodcast', filePath).then((result) => {
       return result;
     });

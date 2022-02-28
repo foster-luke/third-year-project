@@ -127,3 +127,19 @@ body {
     height: 100%;
     align-content: center;
 }
+
+.btnGrey {
+    color: #000;
+    border: 1px solid #363636;
+    background: #C4C4C4;
+    transition: 0.15s;
+}
+
+.btnGrey:hover,
+.btnGrey:active,
+.btnGrey:focus {
+    color: #fff;
+    border: 1px solid #fff;
+    background: #363636;
+    box-shadow: none;
+}

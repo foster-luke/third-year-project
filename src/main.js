@@ -55,9 +55,13 @@ app.on('activate', () => {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
 
-ipcMain.handle('uploadFile', async (event, filePath) => {
-  const dir = './assets/podcasts/';
-  newPath = dir + path.basename(filePath);
+// Save uploaded podcast file to temp
+ipcMain.handle('uploadFileToTemp', async (event, filePath) => {
+  const dir = './assets/podcasts/tmp/';
+  const fileExtension = '.' + filePath.split('.').pop();
+  // Create a temp path with a randomised hexadecimal string
+  const newPath =
+    dir + Math.random().toString(16).substring(2, 16) + fileExtension;
 
   // If the location does not exist then create it
   if (!fs.existsSync(dir)) {
@@ -67,15 +71,41 @@ ipcMain.handle('uploadFile', async (event, filePath) => {
   const result =
     await fsPromises.copyFile(filePath, newPath, fs.constants.COPYFILE_EXCL)
         .then(function() {
-          return true;
+          return newPath;
         })
         .catch(function(error) {
           throw error;
-          return false;
         });
 
   return result;
 });
+
+// Move podcast file from temp to permancent storage
+ipcMain.handle('moveTempPodcastToStorage',
+    async (event, tmpFileName, permFileName) => {
+      const dir = './assets/podcasts/';
+      const fileExtension = '.' + tmpFileName.split('.').pop();
+
+      // If the location does not exist then create it
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, {recursive: true});
+      }
+
+      // Move file from temp to permanent storage
+      const result =
+        await fsPromises.rename(
+            tmpFileName,
+            dir + permFileName + fileExtension,
+        )
+            .then(function() {
+              return true;
+            })
+            .catch(function(error) {
+              throw error;
+            });
+
+      return result;
+    });
 
 ipcMain.handle('getPodcast', async (event, filePath) => {
   const result = await fsPromises.readFile(filePath, {
