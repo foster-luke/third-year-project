@@ -15,7 +15,7 @@ class EpisodeUpload extends React.Component {
       uploadedFiles: [],
     };
     this.handleFileDrop = this.handleFileDrop.bind(this);
-    this.saveEpisodeDetails = this.saveEpisodeDetails.bind(this);
+    this.moveTempEpisodeFile = this.moveTempEpisodeFile.bind(this);
   }
 
   /**
@@ -69,7 +69,7 @@ class EpisodeUpload extends React.Component {
    * @param {*} tmpFileName
    * @param {*} newFileName
    */
-  async saveEpisodeDetails(tmpFileName, newFileName) {
+  async moveTempEpisodeFile(tmpFileName, newFileName) {
     // Save to temp storage
     await window.podcastStorage.moveToPermStorage(tmpFileName, newFileName);
     const uploadedFiles = this.state.uploadedFiles;
@@ -94,7 +94,7 @@ class EpisodeUpload extends React.Component {
       return <EpisodeDetails
         tempFileLocation={uploadedFile.tempFileLocation}
         location={uploadedFile.location}
-        saveEpisodeDetails={this.saveEpisodeDetails}
+        moveTempEpisodeFile={this.moveTempEpisodeFile}
       />;
     } else {
       return <div

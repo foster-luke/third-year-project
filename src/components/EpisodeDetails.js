@@ -53,13 +53,33 @@ class EpisodeDetails extends React.Component {
    * Episode details form submission
    * @param {*} e
    */
-  handleEpisodeFormSubmit(e) {
+  async handleEpisodeFormSubmit(e) {
     e.preventDefault();
+
     const filename =
       this.state.selectedPodcastSlug + '-' +
       this.slugify(this.state.episodeNumber) + '-' +
       this.slugify(this.state.episodeName);
-    this.props.saveEpisodeDetails(this.props.tempFileLocation, filename);
+
+    // Add episode to podcast
+    const storedPodcasts = this.state.storedPodcasts;
+    const podcastIndex = this.state.storedPodcasts.findIndex(function(podcast) {
+      return podcast.slug == this.state.selectedPodcastSlug;
+    }, this);
+    storedPodcasts[podcastIndex].episodes.push({
+      number: this.state.episodeNumber,
+      name: this.state.episodeName,
+      filePath: filename,
+    });
+    // Save new podcast details to storage
+    await window.podcastStorage.updatePodcastInfoDataFile(storedPodcasts);
+
+    this.setState({
+      storedPodcasts: storedPodcasts,
+    });
+
+    // Move temp file
+    this.props.moveTempEpisodeFile(this.props.tempFileLocation, filename);
   }
 
   /**
@@ -87,6 +107,7 @@ class EpisodeDetails extends React.Component {
       slug: slug,
       hosts: this.state.podcastHosts,
       genre: this.state.podcastGenre,
+      episodes: [],
     });
     await window.podcastStorage.updatePodcastInfoDataFile(podcasts);
     this.setState({
@@ -294,7 +315,7 @@ class EpisodeDetails extends React.Component {
 
 EpisodeDetails.propTypes = {
   location: PropTypes.string.isRequired,
-  saveEpisodeDetails: PropTypes.func.isRequired,
+  moveTempEpisodeFile: PropTypes.func.isRequired,
   tempFileLocation: PropTypes.string.isRequired,
   location: PropTypes.string.isRequired,
 };
