@@ -26,6 +26,7 @@ class MainSection extends React.Component {
           <EpisodesListings
             podcast={this.props.selectedPodcast}
             storedPodcasts={this.props.storedPodcasts}
+            updateCurrentlyPlaying={this.props.updateCurrentlyPlaying}
           />;
         break;
 
@@ -52,6 +53,7 @@ MainSection.propTypes = {
   updateStoredPodcasts: PropTypes.func.isRequired,
   storedPodcasts: PropTypes.array.isRequired,
   selectedPodcast: PropTypes.object.isRequired,
+  updateCurrentlyPlaying: PropTypes.func.isRequired,
 };
 
 export default MainSection;

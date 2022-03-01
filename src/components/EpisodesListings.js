@@ -10,6 +10,7 @@ class EpisodesListings extends React.Component {
    */
   constructor(props) {
     super(props);
+    this.handleEpisodeClick = this.handleEpisodeClick.bind(this);
   }
 
   /**
@@ -36,7 +37,12 @@ class EpisodesListings extends React.Component {
         </div>
       </div>
       {this.props.podcast.episodes.map((episode) => {
-        return <EpisodeListing episode={episode} key={episode.number}/>;
+        return <EpisodeListing
+          episode={episode}
+          key={episode.number}
+          handleEpisodeClick={this.handleEpisodeClick}
+          podcastName={this.props.podcast.name}
+        />;
       })}
     </div>;
 
@@ -53,11 +59,25 @@ class EpisodesListings extends React.Component {
       {episodes}
     </div>;
   }
+
+  /**
+   *  Change the currently playing episode
+   * @param {object} episode
+   * @param {string} podcastName
+   */
+  handleEpisodeClick(episode, podcastName) {
+    this.props.updateCurrentlyPlaying({
+      filePath: episode.filePath,
+      episodeName: episode.name,
+      podcastName: podcastName,
+    });
+  }
 }
 
 EpisodesListings.propTypes = {
   storedPodcasts: PropTypes.array.isRequired,
   podcast: PropTypes.object.isRequired,
+  updateCurrentlyPlaying: PropTypes.func.isRequired,
 };
 
 /**
@@ -67,7 +87,10 @@ EpisodesListings.propTypes = {
  */
 function EpisodeListing(props) {
   // Return a single episode row
-  return <div className="row">
+  return <div
+    className="row episodeListing"
+    onClick={() => props.handleEpisodeClick(props.episode, props.podcastName)}
+  >
     <div className="col-1">
       {props.episode.number}.
     </div>
@@ -99,6 +122,8 @@ function EpisodeListing(props) {
 
 EpisodeListing.propTypes = {
   episode: PropTypes.object.isRequired,
+  podcastName: PropTypes.string.isRequired,
+  handleEpisodeClick: PropTypes.func.isRequired,
 };
 
 

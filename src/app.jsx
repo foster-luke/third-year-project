@@ -16,10 +16,12 @@ class App extends React.Component {
       displayedSection: 'EpisodeUpload',
       selectedPodcast: {},
       storedPodcasts: [],
+      currentlyPlaying: {},
     };
     this.updateStoredPodcasts = this.updateStoredPodcasts.bind(this);
     this.updateDisplayedSection = this.updateDisplayedSection.bind(this);
     this.updateSelectedPodcast = this.updateSelectedPodcast.bind(this);
+    this.updateCurrentlyPlaying = this.updateCurrentlyPlaying.bind(this);
   }
 
   /**
@@ -81,6 +83,16 @@ class App extends React.Component {
   }
 
   /**
+   * Change currently playing podcast episode
+   * @param {object} currentlyPlaying
+   */
+  updateCurrentlyPlaying(currentlyPlaying) {
+    this.setState({
+      currentlyPlaying: currentlyPlaying,
+    });
+  }
+
+  /**
    * @return {string}
    */
   render() {
@@ -100,10 +112,11 @@ class App extends React.Component {
               updateStoredPodcasts={this.updateStoredPodcasts}
               storedPodcasts={this.state.storedPodcasts}
               selectedPodcast={this.state.selectedPodcast}
+              updateCurrentlyPlaying={this.updateCurrentlyPlaying}
             />
           </div>
         </div>
-        <MediaControls />
+        <MediaControls currentlyPlaying={this.state.currentlyPlaying}/>
       </div>
     );
   }

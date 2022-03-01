@@ -175,7 +175,7 @@ ipcMain.handle('getPodcast', async (event, filePath) => {
         return result;
       })
       .catch(function(error) {
-        return false;
+        throw error;
       });
 
   return result;

@@ -23,13 +23,9 @@ class MediaControls extends React.Component {
     this.handleSkipForwardButtonClick =
           this.handleSkipForwardButtonClick.bind(this);
 
-    const filePath = './assets/podcasts/example.mp3';
     this.state = {
       currentlyPlaying: {
-        podcastName: 'Lorem Ipsum',
-        episodeName: 'Episode 123: Dolor Est',
         length: 0,
-        filePath: filePath,
         playbackPosition: 0,
         sound: null,
       },
@@ -39,10 +35,22 @@ class MediaControls extends React.Component {
   }
 
   /**
- * On module mount
- */
-  componentDidMount() {
-    this.getCurrentlyPlayingFile(this.state.currentlyPlaying.filePath);
+   *
+   * @param {*} prevProps
+   */
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.currentlyPlaying.filePath != null &&
+      this.
+          props.
+          currentlyPlaying.
+          filePath != prevProps.currentlyPlaying.filePath
+    ) {
+      if (this.state.currentlyPlaying.sound != null) {
+        this.state.currentlyPlaying.sound.unload();
+      }
+      this.getCurrentlyPlayingFile(this.props.currentlyPlaying.filePath);
+    }
   }
 
   /**
@@ -66,7 +74,8 @@ class MediaControls extends React.Component {
       const currentlyPlaying = {...prevState.currentlyPlaying};
       currentlyPlaying.sound = sound;
       return {currentlyPlaying};
-    });
+    },
+    this.setState({playing: false}));
 
     return sound;
   }
@@ -171,8 +180,8 @@ class MediaControls extends React.Component {
         <div className='row mediaControls'>
           <div className='col-3 currentlyPlaying'>
                         Currently Playing: <br/>
-            { this.state.currentlyPlaying.podcastName } <br/>
-            { this.state.currentlyPlaying.episodeName }
+            { this.props.currentlyPlaying.podcastName } <br/>
+            { this.props.currentlyPlaying.episodeName }
           </div>
           <div className='col-6'>
             <div className='row'>
@@ -213,6 +222,10 @@ class MediaControls extends React.Component {
     </>;
   }
 }
+
+MediaControls.propTypes = {
+  currentlyPlaying: PropTypes.object.isRequired,
+};
 
 /**
  * Volume controls component
