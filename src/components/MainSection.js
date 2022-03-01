@@ -26,7 +26,11 @@ class MainSection extends React.Component {
         break;
 
       case 'EpisodeUpload':
-        displayedSection = <EpisodeUpload />;
+        displayedSection =
+          <EpisodeUpload
+            updateStoredPodcasts={this.props.updateStoredPodcasts}
+            storedPodcasts={this.props.storedPodcasts}
+          />;
         break;
 
       default:
@@ -41,6 +45,8 @@ class MainSection extends React.Component {
 
 MainSection.propTypes = {
   displayedSection: PropTypes.string.isRequired,
+  updateStoredPodcasts: PropTypes.func.isRequired,
+  storedPodcasts: PropTypes.array.isRequired,
 };
 
 export default MainSection;

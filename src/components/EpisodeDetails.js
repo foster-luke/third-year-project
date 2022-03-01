@@ -17,7 +17,6 @@ class EpisodeDetails extends React.Component {
       episodeNumber: '',
       episodeName: '',
       selectedPodcastSlug: '',
-      storedPodcasts: [],
       podcastSelectAlert: false,
       podcastSlugAlert: false,
     };
@@ -26,29 +25,6 @@ class EpisodeDetails extends React.Component {
     this.handlePodcastFormSubmit = this.handlePodcastFormSubmit.bind(this);
     this.handleSelectedPodcastChange =
       this.handleSelectedPodcastChange.bind(this);
-  }
-
-  /**
-   *
-   */
-  async componentDidMount() {
-    const storedPodcasts =
-      await this.getStoredPodcasts().then(function(result) {
-        return result;
-      });
-    this.setState({
-      storedPodcasts: storedPodcasts,
-    });
-  }
-
-  /**
-   * Get all podcasts that are currently stored in the file system
-   * @return {JSON}
-   */
-  async getStoredPodcasts() {
-    const result =
-      await window.podcastStorage.getPodcastInfoDataFile();
-    return result;
   }
 
   /**
@@ -75,8 +51,8 @@ class EpisodeDetails extends React.Component {
     );
 
     // Add episode to podcast
-    const storedPodcasts = this.state.storedPodcasts;
-    const podcastIndex = this.state.storedPodcasts.findIndex(function(podcast) {
+    const storedPodcasts = this.props.storedPodcasts;
+    const podcastIndex = this.props.storedPodcasts.findIndex(function(podcast) {
       return podcast.slug == this.state.selectedPodcastSlug;
     }, this);
     storedPodcasts[podcastIndex].episodes.push({
@@ -84,9 +60,7 @@ class EpisodeDetails extends React.Component {
       name: this.state.episodeName,
       filePath: filename,
     });
-    this.setState({
-      storedPodcasts: storedPodcasts,
-    });
+    this.props.updateStoredPodcasts(storedPodcasts);
 
     // Save new podcast details to storage
     await window.podcastStorage.updatePodcastInfoDataFile(storedPodcasts);
@@ -112,7 +86,7 @@ class EpisodeDetails extends React.Component {
   async handlePodcastFormSubmit(e) {
     e.preventDefault();
     const slug = this.slugify(this.state.podcastName);
-    const podcasts = this.state.storedPodcasts;
+    const podcasts = this.props.storedPodcasts;
 
     // If that podcast slug already exists, show error
     if (podcasts.find(function(podcast) {
@@ -129,8 +103,8 @@ class EpisodeDetails extends React.Component {
       episodes: [],
     });
     await window.podcastStorage.updatePodcastInfoDataFile(podcasts);
+    this.props.updateStoredPodcasts(podcasts);
     this.setState({
-      storedPodcasts: podcasts,
       selectedPodcastSlug: slug,
       podcastSlugAlert: false,
     });
@@ -171,7 +145,7 @@ class EpisodeDetails extends React.Component {
       );
     } else {
       // Find the selected podcast from the list of stored ones
-      const podcast = this.state.storedPodcasts.find(function(e) {
+      const podcast = this.props.storedPodcasts.find(function(e) {
         return e.slug == slug;
       });
 
@@ -191,7 +165,7 @@ class EpisodeDetails extends React.Component {
    * @return {string}
    */
   render() {
-    const podcastOptions = this.state.storedPodcasts.map((podcast) =>
+    const podcastOptions = this.props.storedPodcasts.map((podcast) =>
       <option value={podcast.slug} key={podcast.slug}>{podcast.name}</option>,
     );
 
@@ -340,8 +314,8 @@ class EpisodeDetails extends React.Component {
           <div
             className="col-sm-8 mb-2"
             style={{
-              'white-space': 'nowrap',
-              'text-overflow': 'ellipsis',
+              'whiteSpace': 'nowrap',
+              'textOverflow': 'ellipsis',
               'direction': 'rtl',
               'overflow': 'hidden',
               'textAlign': 'left',
@@ -383,6 +357,8 @@ EpisodeDetails.propTypes = {
   moveToNextUploadedFile: PropTypes.func.isRequired,
   tempFileLocation: PropTypes.string.isRequired,
   location: PropTypes.string.isRequired,
+  storedPodcasts: PropTypes.array.isRequired,
+  updateStoredPodcasts: PropTypes.func.isRequired,
 };
 
 export default EpisodeDetails;

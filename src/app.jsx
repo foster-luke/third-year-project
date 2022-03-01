@@ -14,7 +14,43 @@ class App extends React.Component {
     super(props);
     this.state = {
       displayedSection: 'EpisodeUpload',
+      storedPodcasts: [],
     };
+    this.updateStoredPodcasts = this.updateStoredPodcasts.bind(this);
+  }
+
+  /**
+   *
+   */
+  async componentDidMount() {
+    // Get stored podcasts and save them to the state
+    const storedPodcasts =
+      await this.getStoredPodcasts().then(function(result) {
+        return result;
+      });
+
+    this.setState({
+      storedPodcasts: storedPodcasts,
+    });
+  }
+
+  /**
+   * Get all podcasts that are currently stored in the file system
+   * @return {Array}
+   */
+  async getStoredPodcasts() {
+    const result =
+      await window.podcastStorage.getPodcastInfoDataFile();
+    return result;
+  }
+
+  /**
+   * @param {*} storedPodcasts
+   */
+  updateStoredPodcasts(storedPodcasts) {
+    this.setState({
+      storedPodcasts: storedPodcasts,
+    });
   }
 
   /**
@@ -25,10 +61,14 @@ class App extends React.Component {
       <div className="container-fluid">
         <div className="row">
           <div className="col-3 p-0">
-            <SideBar />
+            <SideBar podcasts={this.state.storedPodcasts}/>
           </div>
           <div className="col-9 p-0">
-            <MainSection displayedSection={this.state.displayedSection}/>
+            <MainSection
+              displayedSection={this.state.displayedSection}
+              updateStoredPodcasts={this.updateStoredPodcasts}
+              storedPodcasts={this.state.storedPodcasts}
+            />
           </div>
         </div>
         <MediaControls />

@@ -1,5 +1,6 @@
 import React from 'react';
 import EpisodeDetails from './EpisodeDetails';
+import PropTypes from 'prop-types';
 
 /**
  *
@@ -107,6 +108,8 @@ class EpisodeUpload extends React.Component {
         location={uploadedFile.location}
         moveTempEpisodeFile={this.moveTempEpisodeFile}
         moveToNextUploadedFile={this.moveToNextUploadedFile}
+        updateStoredPodcasts={this.props.updateStoredPodcasts}
+        storedPodcasts={this.props.storedPodcasts}
       />;
     } else {
       return <div
@@ -126,4 +129,10 @@ class EpisodeUpload extends React.Component {
     }
   }
 }
+
+EpisodeUpload.propTypes = {
+  updateStoredPodcasts: PropTypes.func.isRequired,
+  storedPodcasts: PropTypes.array.isRequired,
+};
+
 export default EpisodeUpload;

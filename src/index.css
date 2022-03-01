@@ -143,3 +143,14 @@ body {
     background: #363636;
     box-shadow: none;
 }
+
+.podcastLink{
+  cursor:pointer;
+  border-bottom:1px dashed rgb(148, 148, 148);
+}
+
+.podcastLink.btnIcon:hover{
+    border-bottom:1px dashed rgb(148, 148, 148);
+    box-shadow: none;
+    background: none;
+}
