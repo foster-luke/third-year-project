@@ -59,9 +59,16 @@ app.on('activate', () => {
 ipcMain.handle('uploadFileToTemp', async (event, filePath) => {
   const dir = './assets/podcasts/tmp/';
   const fileExtension = '.' + filePath.split('.').pop();
+
+  let randomString = Math.random().toString(16).substring(2, 16);
+  // Check file doesnt exist
+  // if it does then change random string until it doesnt
+  while (fs.existsSync(dir + randomString + fileExtension)) {
+    randomString = Math.random().toString(16).substring(2, 16);
+  }
+
   // Create a temp path with a randomised hexadecimal string
-  const newPath =
-    dir + Math.random().toString(16).substring(2, 16) + fileExtension;
+  const newPath = dir + randomString + fileExtension;
 
   // If the location does not exist then create it
   if (!fs.existsSync(dir)) {
