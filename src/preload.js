@@ -7,7 +7,7 @@ contextBridge.exposeInMainWorld('podcastStorage', {
     });
   },
   moveToPermStorage: async (permFileName, tmpFileName) => {
-    return ipcRenderer
+    return await ipcRenderer
         .invoke('moveTempPodcastToStorage', permFileName, tmpFileName)
         .then((result) => {
           return result;

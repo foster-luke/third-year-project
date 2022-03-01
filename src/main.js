@@ -91,20 +91,28 @@ ipcMain.handle('moveTempPodcastToStorage',
         fs.mkdirSync(dir, {recursive: true});
       }
 
-      // Move file from temp to permanent storage
-      const result =
-        await fsPromises.rename(
-            tmpFileName,
-            dir + permFileName + fileExtension,
-        )
-            .then(function() {
-              return true;
-            })
-            .catch(function(error) {
-              throw error;
-            });
+      // Add random string to end of filename
+      let randomString = '-' + Math.random().toString(16).substring(2, 8);
 
-      return result;
+      // Check file doesnt exist
+      // if it does then change random string until it doesnt
+      while (fs.existsSync(dir + permFileName + randomString + fileExtension)) {
+        randomString = '-' + Math.random().toString(16).substring(2, 8);
+      }
+
+      // Move file from temp to permanent storage
+      await fsPromises.rename(
+          tmpFileName,
+          dir + permFileName + randomString + fileExtension,
+      )
+          .then(function() {
+            return true;
+          })
+          .catch(function(error) {
+            throw error;
+          });
+
+      return dir + permFileName + randomString + fileExtension;
     });
 
 // Get podcast info data file contents

@@ -16,6 +16,7 @@ class EpisodeUpload extends React.Component {
     };
     this.handleFileDrop = this.handleFileDrop.bind(this);
     this.moveTempEpisodeFile = this.moveTempEpisodeFile.bind(this);
+    this.moveToNextUploadedFile = this.moveToNextUploadedFile.bind(this);
   }
 
   /**
@@ -71,7 +72,17 @@ class EpisodeUpload extends React.Component {
    */
   async moveTempEpisodeFile(tmpFileName, newFileName) {
     // Save to temp storage
-    await window.podcastStorage.moveToPermStorage(tmpFileName, newFileName);
+    const res =
+      await window.podcastStorage.moveToPermStorage(tmpFileName, newFileName);
+    return res;
+  }
+
+  /**
+   *
+   * @param {*} tmpFileName
+   * @param {*} newFileName
+   */
+  async moveToNextUploadedFile() {
     const uploadedFiles = this.state.uploadedFiles;
     uploadedFiles.splice(0, 1);
     this.setState({
@@ -95,6 +106,7 @@ class EpisodeUpload extends React.Component {
         tempFileLocation={uploadedFile.tempFileLocation}
         location={uploadedFile.location}
         moveTempEpisodeFile={this.moveTempEpisodeFile}
+        moveToNextUploadedFile={this.moveToNextUploadedFile}
       />;
     } else {
       return <div

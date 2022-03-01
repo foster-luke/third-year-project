@@ -19,6 +19,7 @@ class EpisodeDetails extends React.Component {
       selectedPodcastSlug: '',
       storedPodcasts: [],
       podcastSelectAlert: false,
+      podcastSlugAlert: false,
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleEpisodeFormSubmit = this.handleEpisodeFormSubmit.bind(this);
@@ -63,10 +64,15 @@ class EpisodeDetails extends React.Component {
       return false;
     }
 
-    const filename =
+    let filename =
       this.state.selectedPodcastSlug + '-' +
       this.slugify(this.state.episodeNumber) + '-' +
       this.slugify(this.state.episodeName);
+
+    // Move temp file
+    filename = await this.props.moveTempEpisodeFile(
+        this.props.tempFileLocation, filename,
+    );
 
     // Add episode to podcast
     const storedPodcasts = this.state.storedPodcasts;
@@ -78,15 +84,13 @@ class EpisodeDetails extends React.Component {
       name: this.state.episodeName,
       filePath: filename,
     });
-    // Save new podcast details to storage
-    await window.podcastStorage.updatePodcastInfoDataFile(storedPodcasts);
-
     this.setState({
       storedPodcasts: storedPodcasts,
     });
 
-    // Move temp file
-    this.props.moveTempEpisodeFile(this.props.tempFileLocation, filename);
+    // Save new podcast details to storage
+    await window.podcastStorage.updatePodcastInfoDataFile(storedPodcasts);
+    this.props.moveToNextUploadedFile();
   }
 
   /**
@@ -109,6 +113,14 @@ class EpisodeDetails extends React.Component {
     e.preventDefault();
     const slug = this.slugify(this.state.podcastName);
     const podcasts = this.state.storedPodcasts;
+
+    // If that podcast slug already exists, show error
+    if (podcasts.find(function(podcast) {
+      return podcast.slug == slug;
+    }, this)) {
+      this.setState({podcastSlugAlert: true});
+      return false;
+    }
     podcasts.push({
       name: this.state.podcastName,
       slug: slug,
@@ -120,6 +132,7 @@ class EpisodeDetails extends React.Component {
     this.setState({
       storedPodcasts: podcasts,
       selectedPodcastSlug: slug,
+      podcastSlugAlert: false,
     });
   }
 
@@ -257,14 +270,29 @@ class EpisodeDetails extends React.Component {
             />
           </div>
         </div>
-        <button
-          type="submit"
-          className="btn btnGrey btn-sm"
-          id="savePodcast"
-          disabled={this.state.selectedPodcastSlug != ''}
-        >
-          Save New Podcast
-        </button>
+        <div className="mb-1 row">
+          <div className="col-sm-4">
+            <button
+              type="submit"
+              className="btn btnGrey btn-sm"
+              id="savePodcast"
+              disabled={this.state.selectedPodcastSlug != ''}
+            >
+            Save New Podcast
+            </button>
+          </div>
+          <div className="col-sm-8">
+            <div
+              className={'alert alert-danger py-0 ' +
+                (this.state.podcastSlugAlert ? '' : 'invisible')
+              }
+              id="podcastSelectAlert"
+              role="alert"
+            >
+              This name is already in use
+            </div>
+          </div>
+        </div>
       </form>
       <hr className="mb-1 mt-3"/>
       <form onSubmit={this.handleEpisodeFormSubmit}>
@@ -343,6 +371,7 @@ class EpisodeDetails extends React.Component {
 EpisodeDetails.propTypes = {
   location: PropTypes.string.isRequired,
   moveTempEpisodeFile: PropTypes.func.isRequired,
+  moveToNextUploadedFile: PropTypes.func.isRequired,
   tempFileLocation: PropTypes.string.isRequired,
   location: PropTypes.string.isRequired,
 };
