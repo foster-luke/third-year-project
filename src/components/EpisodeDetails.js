@@ -337,7 +337,16 @@ class EpisodeDetails extends React.Component {
           <div className="col-sm-4">
             File Location
           </div>
-          <div className="col-sm-8 mb-2">
+          <div
+            className="col-sm-8 mb-2"
+            style={{
+              'white-space': 'nowrap',
+              'text-overflow': 'ellipsis',
+              'direction': 'rtl',
+              'overflow': 'hidden',
+              'textAlign': 'left',
+            }}
+          >
             {this.props.location}
           </div>
         </div>
