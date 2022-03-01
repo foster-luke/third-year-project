@@ -10,36 +10,6 @@ class EpisodesListings extends React.Component {
    */
   constructor(props) {
     super(props);
-    this.state = {
-      podcast: {
-        name: 'My Brother, My Brother & Me',
-        genre: 'Comedy',
-        hosts: 'Justin, Travis and Griffin McElroy',
-      },
-      episodes: [
-        {
-          number: 595,
-          name: 'Episode595name',
-          length: 55.55,
-          analysed: true,
-          ads_removed: true,
-        },
-        {
-          number: 596,
-          name: 'Episode596name',
-          length: 64.04,
-          analysed: true,
-          ads_removed: false,
-        },
-        {
-          number: 597,
-          name: 'Episode597name',
-          length: 24.45,
-          analysed: false,
-          ads_removed: false,
-        },
-      ],
-    };
   }
 
   /**
@@ -65,7 +35,7 @@ class EpisodesListings extends React.Component {
                     Trimmed
         </div>
       </div>
-      {this.state.episodes.map((episode) => {
+      {this.props.podcast.episodes.map((episode) => {
         return <EpisodeListing episode={episode} key={episode.number}/>;
       })}
     </div>;
@@ -73,17 +43,22 @@ class EpisodesListings extends React.Component {
     return <div id="episodesListings">
       <div className="row" id="podcastHeader">
         <div className="col-6" id="podcastName">
-          {this.state.podcast.name}
+          {this.props.podcast.name}
         </div>
         <div className="col-6" id="podcastDetails">
-                    Genre: {this.state.podcast.genre} <br />
-                    Hosts: {this.state.podcast.hosts} <br />
+                    Genre: {this.props.podcast.genre} <br />
+                    Hosts: {this.props.podcast.hosts} <br />
         </div>
       </div>
       {episodes}
     </div>;
   }
 }
+
+EpisodesListings.propTypes = {
+  storedPodcasts: PropTypes.array.isRequired,
+  podcast: PropTypes.object.isRequired,
+};
 
 /**
  * A single episode in the list

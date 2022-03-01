@@ -22,7 +22,11 @@ class MainSection extends React.Component {
     let displayedSection;
     switch (this.props.displayedSection) {
       case 'EpisodesListings':
-        displayedSection = <EpisodesListings />;
+        displayedSection =
+          <EpisodesListings
+            podcast={this.props.selectedPodcast}
+            storedPodcasts={this.props.storedPodcasts}
+          />;
         break;
 
       case 'EpisodeUpload':
@@ -47,6 +51,7 @@ MainSection.propTypes = {
   displayedSection: PropTypes.string.isRequired,
   updateStoredPodcasts: PropTypes.func.isRequired,
   storedPodcasts: PropTypes.array.isRequired,
+  selectedPodcast: PropTypes.object.isRequired,
 };
 
 export default MainSection;

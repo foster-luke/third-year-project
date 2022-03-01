@@ -11,6 +11,8 @@ class SideBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.handlePodcastLinkClick = this.handlePodcastLinkClick.bind(this);
+    this.handleUploadButtonClick = this.handleUploadButtonClick.bind(this);
   }
 
   /**
@@ -42,22 +44,25 @@ class SideBar extends React.Component {
   }
 
   /**
-   * @param {*} e
+   * @param {string} slug
    */
-  handlePodcastLinkClick(e) {
-    console.log('Click!');
+  handlePodcastLinkClick(slug) {
+    this.props.updateDisplayedSection('EpisodesListings');
+    this.props.updateSelectedPodcast(slug);
   }
 
   /**
    * @param {*} e
    */
   handleUploadButtonClick(e) {
-    console.log('Click!');
+    this.props.updateDisplayedSection('EpisodeUpload');
   }
 }
 
 SideBar.propTypes = {
   podcasts: PropTypes.array.isRequired,
+  updateDisplayedSection: PropTypes.func.isRequired,
+  updateSelectedPodcast: PropTypes.func.isRequired,
 };
 
 /**
@@ -80,6 +85,7 @@ function PodcastsList(props) {
 PodcastsList.propTypes = {
   podcasts: PropTypes.array.isRequired,
   handlePodcastLinkClick: PropTypes.func.isRequired,
+  handlePodcastLinkClick: PropTypes.func.isRequired,
 };
 
 /**
@@ -89,7 +95,7 @@ PodcastsList.propTypes = {
 function PodcastLink(props) {
   return <div
     className='row btnIcon fs-6 text-start podcastLink my-1 py-1 pb-2'
-    onClick={props.handlePodcastLinkClick}
+    onClick={() => props.handlePodcastLinkClick(props.podcast.slug)}
   >
     <div className="col-9 px-0">{props.podcast.name}</div>
     <div className="col-3" style={{alignSelf: 'center'}}>

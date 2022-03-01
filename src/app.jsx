@@ -14,9 +14,12 @@ class App extends React.Component {
     super(props);
     this.state = {
       displayedSection: 'EpisodeUpload',
+      selectedPodcast: {},
       storedPodcasts: [],
     };
     this.updateStoredPodcasts = this.updateStoredPodcasts.bind(this);
+    this.updateDisplayedSection = this.updateDisplayedSection.bind(this);
+    this.updateSelectedPodcast = this.updateSelectedPodcast.bind(this);
   }
 
   /**
@@ -54,6 +57,30 @@ class App extends React.Component {
   }
 
   /**
+   *
+   * @param {*} section
+   */
+  updateDisplayedSection(section) {
+    this.setState({
+      displayedSection: section,
+    });
+  }
+
+  /**
+   * @param {string} podcastSlug
+   */
+  updateSelectedPodcast(podcastSlug) {
+    const podcast =
+      this.state.storedPodcasts.find(function(podcast) {
+        return podcast.slug == podcastSlug;
+      });
+
+    this.setState({
+      selectedPodcast: podcast,
+    });
+  }
+
+  /**
    * @return {string}
    */
   render() {
@@ -61,13 +88,18 @@ class App extends React.Component {
       <div className="container-fluid">
         <div className="row">
           <div className="col-3 p-0">
-            <SideBar podcasts={this.state.storedPodcasts}/>
+            <SideBar
+              podcasts={this.state.storedPodcasts}
+              updateDisplayedSection={this.updateDisplayedSection}
+              updateSelectedPodcast={this.updateSelectedPodcast}
+            />
           </div>
           <div className="col-9 p-0">
             <MainSection
               displayedSection={this.state.displayedSection}
               updateStoredPodcasts={this.updateStoredPodcasts}
               storedPodcasts={this.state.storedPodcasts}
+              selectedPodcast={this.state.selectedPodcast}
             />
           </div>
         </div>
