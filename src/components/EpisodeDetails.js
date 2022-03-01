@@ -18,6 +18,7 @@ class EpisodeDetails extends React.Component {
       episodeName: '',
       selectedPodcastSlug: '',
       storedPodcasts: [],
+      podcastSelectAlert: false,
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleEpisodeFormSubmit = this.handleEpisodeFormSubmit.bind(this);
@@ -55,6 +56,12 @@ class EpisodeDetails extends React.Component {
    */
   async handleEpisodeFormSubmit(e) {
     e.preventDefault();
+
+    // Validate podcast has been selected
+    if (this.state.selectedPodcastSlug == '') {
+      this.setState({podcastSelectAlert: true});
+      return false;
+    }
 
     const filename =
       this.state.selectedPodcastSlug + '-' +
@@ -139,11 +146,11 @@ class EpisodeDetails extends React.Component {
     const target = e.target;
     const slug = target.value;
 
-    if (slug == 'new') {
+    if (slug == '') {
       // If adding a new podcast
       this.setState(
           {
-            selectedPodcastSlug: 'new',
+            selectedPodcastSlug: '',
             podcastName: '',
             podcastHosts: '',
             podcastGenre: '',
@@ -194,8 +201,7 @@ class EpisodeDetails extends React.Component {
               value={this.state.selectedPodcastSlug}
               onChange={this.handleSelectedPodcastChange}
             >
-              <option value="" disabled>Select Podcast</option>
-              <option value="new">New Podcast</option>
+              <option value="">New Podcast</option>
               {podcastOptions}
             </select>
           </div>
@@ -209,10 +215,11 @@ class EpisodeDetails extends React.Component {
               type='text'
               id='podcastName'
               className='form-control form-control-sm'
-              disabled={this.state.selectedPodcastSlug != 'new'}
+              disabled={this.state.selectedPodcastSlug != ''}
               value={this.state.podcastName}
               name="podcastName"
               onChange={this.handleInputChange}
+              required
             />
           </div>
         </div>
@@ -225,10 +232,11 @@ class EpisodeDetails extends React.Component {
               type='text'
               id='podcastHosts'
               className='form-control form-control-sm'
-              disabled={this.state.selectedPodcastSlug != 'new'}
+              disabled={this.state.selectedPodcastSlug != ''}
               value={this.state.podcastHosts}
               name="podcastHosts"
               onChange={this.handleInputChange}
+              required
             />
           </div>
         </div>
@@ -241,17 +249,19 @@ class EpisodeDetails extends React.Component {
               type='text'
               id='podcastGenre'
               className='form-control form-control-sm'
-              disabled={this.state.selectedPodcastSlug != 'new'}
+              disabled={this.state.selectedPodcastSlug != ''}
               value={this.state.podcastGenre}
               name="podcastGenre"
               onChange={this.handleInputChange}
+              required
             />
           </div>
         </div>
         <button
           type="submit"
-          className="btn btn-primary btnGrey btn-sm"
+          className="btn btnGrey btn-sm"
           id="savePodcast"
+          disabled={this.state.selectedPodcastSlug != ''}
         >
           Save New Podcast
         </button>
@@ -275,6 +285,7 @@ class EpisodeDetails extends React.Component {
               value={this.state.episodeNumber}
               name="episodeNumber"
               onChange={this.handleInputChange}
+              required
             />
           </div>
         </div>
@@ -290,6 +301,7 @@ class EpisodeDetails extends React.Component {
               value={this.state.episodeName}
               name="episodeName"
               onChange={this.handleInputChange}
+              required
             />
           </div>
         </div>
@@ -301,13 +313,28 @@ class EpisodeDetails extends React.Component {
             {this.props.location}
           </div>
         </div>
-        <button
-          type="submit"
-          className="btn btn-primary btnGrey btn-sm"
-          id="saveEpisode"
-        >
-          Save Episode Details
-        </button>
+        <div className="mb-1 row">
+          <div className="col-sm-4">
+            <button
+              type="submit"
+              className="btn btnGrey btn-sm"
+              id="saveEpisode"
+            >
+              Save Episode Details
+            </button>
+          </div>
+          <div className="col-sm-8 mb-2">
+            <div
+              className={'alert alert-danger py-0 ' +
+                (this.state.podcastSelectAlert ? '' : 'invisible')
+              }
+              id="podcastSelectAlert"
+              role="alert"
+            >
+              Please select a podcast
+            </div>
+          </div>
+        </div>
       </form>
     </div>;
   }
