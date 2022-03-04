@@ -11,6 +11,8 @@ class EpisodesListings extends React.Component {
   constructor(props) {
     super(props);
     this.handleEpisodeClick = this.handleEpisodeClick.bind(this);
+    this.handleLabelSectionsButtonClick =
+      this.handleLabelSectionsButtonClick.bind(this);
   }
 
   /**
@@ -41,6 +43,7 @@ class EpisodesListings extends React.Component {
           episode={episode}
           key={episode.number}
           handleEpisodeClick={this.handleEpisodeClick}
+          handleLabelSectionsButtonClick={this.handleLabelSectionsButtonClick}
           podcastName={this.props.podcast.name}
         />;
       })}
@@ -72,12 +75,22 @@ class EpisodesListings extends React.Component {
       podcastName: podcastName,
     });
   }
+
+  /**
+   *
+   * @param {*} e
+   */
+  handleLabelSectionsButtonClick(e) {
+    e.stopPropagation();
+    this.props.updateDisplayedSection('SectionLabelling');
+  }
 }
 
 EpisodesListings.propTypes = {
   storedPodcasts: PropTypes.array.isRequired,
   podcast: PropTypes.object.isRequired,
   updateCurrentlyPlaying: PropTypes.func.isRequired,
+  updateDisplayedSection: PropTypes.func.isRequired,
 };
 
 /**
@@ -113,17 +126,44 @@ function EpisodeListing(props) {
       }
     </div>
     <div className="col-1 text-center">
-      <button className="btn btnIcon">
-        <i className="bi bi-three-dots"></i>
-      </button>
+      <div className="dropdown">
+        <button
+          className="btn btn-secondary btnIcon"
+          type="button"
+          data-bs-toggle="dropdown"
+          onClick={handleSettingsButtonClick}
+        >
+          <i className="bi bi-three-dots"></i>
+        </button>
+        <ul className="dropdown-menu">
+          <li>
+            <a
+              className="dropdown-item"
+              href="#"
+              onClick={props.handleLabelSectionsButtonClick}
+            >
+              Label Sections
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>;
+}
+
+/**
+ * Prevents the parent row onclick even from firing
+ * @param {*} e
+ */
+function handleSettingsButtonClick(e) {
+  e.stopPropagation();
 }
 
 EpisodeListing.propTypes = {
   episode: PropTypes.object.isRequired,
   podcastName: PropTypes.string.isRequired,
   handleEpisodeClick: PropTypes.func.isRequired,
+  handleLabelSectionsButtonClick: PropTypes.func.isRequired,
 };
 
 

@@ -2,6 +2,7 @@ import React from 'react';
 import EpisodesListings from './EpisodesListings';
 import EpisodeUpload from './EpisodeUpload';
 import PropTypes from 'prop-types';
+import SectionLabelling from './SectionLabelling';
 
 /**
  * Main Section component
@@ -27,6 +28,7 @@ class MainSection extends React.Component {
             podcast={this.props.selectedPodcast}
             storedPodcasts={this.props.storedPodcasts}
             updateCurrentlyPlaying={this.props.updateCurrentlyPlaying}
+            updateDisplayedSection={this.props.updateDisplayedSection}
           />;
         break;
 
@@ -35,6 +37,12 @@ class MainSection extends React.Component {
           <EpisodeUpload
             updateStoredPodcasts={this.props.updateStoredPodcasts}
             storedPodcasts={this.props.storedPodcasts}
+          />;
+        break;
+
+      case 'SectionLabelling':
+        displayedSection =
+          <SectionLabelling
           />;
         break;
 
@@ -54,6 +62,7 @@ MainSection.propTypes = {
   storedPodcasts: PropTypes.array.isRequired,
   selectedPodcast: PropTypes.object.isRequired,
   updateCurrentlyPlaying: PropTypes.func.isRequired,
+  updateDisplayedSection: PropTypes.func.isRequired,
 };
 
 export default MainSection;

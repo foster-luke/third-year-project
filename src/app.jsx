@@ -113,6 +113,7 @@ class App extends React.Component {
               storedPodcasts={this.state.storedPodcasts}
               selectedPodcast={this.state.selectedPodcast}
               updateCurrentlyPlaying={this.updateCurrentlyPlaying}
+              updateDisplayedSection={this.updateDisplayedSection}
             />
           </div>
         </div>
