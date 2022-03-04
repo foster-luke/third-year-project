@@ -11,21 +11,29 @@ class SectionLabelling extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      sections: [
+        {
+          'start': '',
+          'end': '',
+        },
+      ],
     };
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   /**
-   * Control the form inputs
+   *
    * @param {*} e
+   * @param {*} boundary "start" or "end"
+   * @param {*} key
    */
-  handleInputChange(e) {
-    const target = e.target;
-    const value = target.value;
-    const name = target.name;
+  handleInputChange(e, boundary, key) {
+    const sections = this.state.sections;
+    if (sections[key] === undefined) sections[key] = [];
+    sections[key][boundary] = e.target.value;
     this.setState(
         {
-          [name]: value,
+          sections: sections,
         },
     );
   }
@@ -55,7 +63,8 @@ class SectionLabelling extends React.Component {
               id='section1StartTime'
               placeholder='Start Time'
               className='form-control form-control-sm'
-              // onChange={this.handleInputChange}
+              value={this.state.sections[0].start}
+              onChange={(e) => this.handleInputChange(e, 'start', 0)}
             />
           </div>
           <div className="col-sm-4">
@@ -64,7 +73,8 @@ class SectionLabelling extends React.Component {
               id='section1EndTime'
               placeholder='End Time'
               className='form-control form-control-sm'
-              // onChange={this.handleInputChange}
+              value={this.state.sections[0].end}
+              onChange={(e) => this.handleInputChange(e, 'end', 0)}
             />
           </div>
         </div>
