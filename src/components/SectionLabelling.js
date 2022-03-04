@@ -10,13 +10,16 @@ class SectionLabelling extends React.Component {
    */
   constructor(props) {
     super(props);
+
+    const sections = this.props.podcast.episode.sections ?? [
+      {
+        'start': '',
+        'end': '',
+      },
+    ];
+
     this.state = {
-      sections: [
-        {
-          'start': '',
-          'end': '',
-        },
-      ],
+      sections,
     };
     this.handleInputChange = this.handleInputChange.bind(this);
   }
@@ -53,31 +56,33 @@ class SectionLabelling extends React.Component {
             {this.props.podcast.episode.name}
           </div>
         </div>
-        <div className="mb-1 row">
-          <div className="col-sm-4">
-            Section 1
-          </div>
-          <div className="col-sm-4">
-            <input
-              type='text'
-              id='section1StartTime'
-              placeholder='Start Time'
-              className='form-control form-control-sm'
-              value={this.state.sections[0].start}
-              onChange={(e) => this.handleInputChange(e, 'start', 0)}
-            />
-          </div>
-          <div className="col-sm-4">
-            <input
-              type='text'
-              id='section1EndTime'
-              placeholder='End Time'
-              className='form-control form-control-sm'
-              value={this.state.sections[0].end}
-              onChange={(e) => this.handleInputChange(e, 'end', 0)}
-            />
-          </div>
-        </div>
+        {this.state.sections.map(function(section, key) {
+          return <div className="mb-1 row" key={key}>
+            <div className="col-sm-4">
+            Section {key + 1}
+            </div>
+            <div className="col-sm-4">
+              <input
+                type='text'
+                id='section1StartTime'
+                placeholder='Start Time'
+                className='form-control form-control-sm'
+                value={section.start}
+                onChange={(e) => this.handleInputChange(e, 'start', key)}
+              />
+            </div>
+            <div className="col-sm-4">
+              <input
+                type='text'
+                id='section1EndTime'
+                placeholder='End Time'
+                className='form-control form-control-sm'
+                value={section.end}
+                onChange={(e) => this.handleInputChange(e, 'end', key)}
+              />
+            </div>
+          </div>;
+        }, this)}
         <div className="mb-2 row mt-4">
           <div className="col">
             <button className='btn btnGrey'>
