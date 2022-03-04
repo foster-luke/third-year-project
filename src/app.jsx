@@ -17,11 +17,14 @@ class App extends React.Component {
       selectedPodcast: {},
       storedPodcasts: [],
       currentlyPlaying: {},
+      currentlyEditing: {},
     };
     this.updateStoredPodcasts = this.updateStoredPodcasts.bind(this);
     this.updateDisplayedSection = this.updateDisplayedSection.bind(this);
     this.updateSelectedPodcast = this.updateSelectedPodcast.bind(this);
     this.updateCurrentlyPlaying = this.updateCurrentlyPlaying.bind(this);
+    this.updateCurrentlyEditing = this.updateCurrentlyEditing.bind(this);
+    this.findStoredPodcast = this.findStoredPodcast.bind(this);
   }
 
   /**
@@ -69,13 +72,24 @@ class App extends React.Component {
   }
 
   /**
+   * Find a podcast in storage with a given slug
    * @param {string} podcastSlug
+   * @return {object}
    */
-  updateSelectedPodcast(podcastSlug) {
+  findStoredPodcast(podcastSlug) {
     const podcast =
       this.state.storedPodcasts.find(function(podcast) {
         return podcast.slug == podcastSlug;
       });
+
+    return podcast;
+  }
+
+  /**
+   * @param {string} podcastSlug
+   */
+  updateSelectedPodcast(podcastSlug) {
+    const podcast = this.findStoredPodcast(podcastSlug);
 
     this.setState({
       selectedPodcast: podcast,
@@ -89,6 +103,21 @@ class App extends React.Component {
   updateCurrentlyPlaying(currentlyPlaying) {
     this.setState({
       currentlyPlaying: currentlyPlaying,
+    });
+  }
+
+  /**
+   * Change podcast episode that is being edited
+   * @param {string} podcastSlug
+   * @param {string} episodeNumber
+   */
+  updateCurrentlyEditing(podcastSlug, episodeNumber) {
+    const podcast = this.findStoredPodcast(podcastSlug);
+    podcast.episode = podcast.episodes.filter(function(episode) {
+      return episode.number == episodeNumber;
+    })[0];
+    this.setState({
+      currentlyEditing: podcast,
     });
   }
 
@@ -114,6 +143,8 @@ class App extends React.Component {
               selectedPodcast={this.state.selectedPodcast}
               updateCurrentlyPlaying={this.updateCurrentlyPlaying}
               updateDisplayedSection={this.updateDisplayedSection}
+              updateCurrentlyEditing={this.updateCurrentlyEditing}
+              currentlyEditing={this.state.currentlyEditing}
             />
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 /**
  * Section labelling component
@@ -37,12 +37,12 @@ class SectionLabelling extends React.Component {
     return <div id="sectionLabelling" className='container p-3'>
       <form onSubmit={this.handlePodcastFormSubmit}>
         <div className="mb-4 row">
-          <div className="col-sm-6">
+          <div className="col-sm-5">
             <legend>Labelled Sections</legend>
           </div>
-          <div className="col-sm-6">
-            Podcast example 1<br />
-            Episode 123
+          <div className="col-sm-7">
+            {this.props.podcast.name}<br />
+            {this.props.podcast.episode.name}
           </div>
         </div>
         <div className="mb-1 row">
@@ -103,11 +103,7 @@ class SectionLabelling extends React.Component {
 }
 
 SectionLabelling.propTypes = {
-  // episodeName: PropTypes.string.isRequired,
-  // episodeSlug: PropTypes.string.isRequired,
-  // podcastName: PropTypes.string.isRequired,
-  // podcastSlug: PropTypes.string.isRequired,
-  // sections: PropTypes.array.isRequired,
+  podcast: PropTypes.object.isRequired,
 };
 
 export default SectionLabelling;

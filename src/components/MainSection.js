@@ -29,6 +29,7 @@ class MainSection extends React.Component {
             storedPodcasts={this.props.storedPodcasts}
             updateCurrentlyPlaying={this.props.updateCurrentlyPlaying}
             updateDisplayedSection={this.props.updateDisplayedSection}
+            updateCurrentlyEditing={this.props.updateCurrentlyEditing}
           />;
         break;
 
@@ -43,6 +44,7 @@ class MainSection extends React.Component {
       case 'SectionLabelling':
         displayedSection =
           <SectionLabelling
+            podcast={this.props.currentlyEditing}
           />;
         break;
 
@@ -62,7 +64,9 @@ MainSection.propTypes = {
   storedPodcasts: PropTypes.array.isRequired,
   selectedPodcast: PropTypes.object.isRequired,
   updateCurrentlyPlaying: PropTypes.func.isRequired,
+  updateCurrentlyEditing: PropTypes.func.isRequired,
   updateDisplayedSection: PropTypes.func.isRequired,
+  currentlyEditing: PropTypes.object,
 };
 
 export default MainSection;

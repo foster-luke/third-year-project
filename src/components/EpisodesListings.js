@@ -45,6 +45,7 @@ class EpisodesListings extends React.Component {
           handleEpisodeClick={this.handleEpisodeClick}
           handleLabelSectionsButtonClick={this.handleLabelSectionsButtonClick}
           podcastName={this.props.podcast.name}
+          podcastSlug={this.props.podcast.slug}
         />;
       })}
     </div>;
@@ -79,10 +80,13 @@ class EpisodesListings extends React.Component {
   /**
    *
    * @param {*} e
+   * @param {*} podcastSlug
+   * @param {*} episodeNumber
    */
-  handleLabelSectionsButtonClick(e) {
+  handleLabelSectionsButtonClick(e, podcastSlug, episodeNumber) {
     e.stopPropagation();
     this.props.updateDisplayedSection('SectionLabelling');
+    this.props.updateCurrentlyEditing(podcastSlug, episodeNumber);
   }
 }
 
@@ -91,6 +95,7 @@ EpisodesListings.propTypes = {
   podcast: PropTypes.object.isRequired,
   updateCurrentlyPlaying: PropTypes.func.isRequired,
   updateDisplayedSection: PropTypes.func.isRequired,
+  updateCurrentlyEditing: PropTypes.func.isRequired,
 };
 
 /**
@@ -140,7 +145,9 @@ function EpisodeListing(props) {
             <a
               className="dropdown-item"
               href="#"
-              onClick={props.handleLabelSectionsButtonClick}
+              onClick={(e) => props.handleLabelSectionsButtonClick(
+                  e, props.podcastSlug, props.episode.number,
+              )}
             >
               Label Sections
             </a>
@@ -162,6 +169,7 @@ function handleSettingsButtonClick(e) {
 EpisodeListing.propTypes = {
   episode: PropTypes.object.isRequired,
   podcastName: PropTypes.string.isRequired,
+  podcastSlug: PropTypes.string.isRequired,
   handleEpisodeClick: PropTypes.func.isRequired,
   handleLabelSectionsButtonClick: PropTypes.func.isRequired,
 };
