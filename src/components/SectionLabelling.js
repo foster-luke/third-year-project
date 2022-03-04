@@ -22,6 +22,8 @@ class SectionLabelling extends React.Component {
       sections,
     };
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleNewSectionButtonClick =
+      this.handleNewSectionButtonClick.bind(this);
   }
 
   /**
@@ -39,6 +41,22 @@ class SectionLabelling extends React.Component {
           sections: sections,
         },
     );
+  }
+
+  /**
+   * Add inputs for a new sponsored section
+   * @param {*} e
+   */
+  handleNewSectionButtonClick(e) {
+    e.preventDefault();
+    const sections = this.state.sections;
+    sections.push({
+      'start': '',
+      'end': '',
+    });
+    this.setState({
+      sections: sections,
+    });
   }
 
   /**
@@ -85,7 +103,11 @@ class SectionLabelling extends React.Component {
         }, this)}
         <div className="mb-2 row mt-4">
           <div className="col">
-            <button className='btn btnGrey'>
+            <button
+              className='btn btnGrey'
+              onClick={this.handleNewSectionButtonClick}
+              disabled={this.state.sections.length > 7}
+            >
               Add New Section
             </button>
           </div>
