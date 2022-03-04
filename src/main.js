@@ -2,6 +2,8 @@ const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
 const fs = require('fs');
 const fsPromises = require('fs').promises;
+const {default: installExtension, REACT_DEVELOPER_TOOLS} =
+  require('electron-devtools-installer');
 
 let mainWindow;
 
@@ -10,6 +12,12 @@ if (require('electron-squirrel-startup')) {
   // eslint-disable-line global-require
   app.quit();
 }
+
+app.on('ready', () => {
+  installExtension(REACT_DEVELOPER_TOOLS)
+      .then((name) => console.log(`Added Extension:  ${name}`))
+      .catch((err) => console.log('An error occurred: ', err));
+});
 
 const createWindow = () => {
   // Create the browser window.

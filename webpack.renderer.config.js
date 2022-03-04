@@ -6,6 +6,8 @@ rules.push({
 });
 
 module.exports = {
+
+  devtool: 'nosources-source-map',
   // Put your normal webpack config below here
   module: {
     rules,
