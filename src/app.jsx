@@ -25,6 +25,8 @@ class App extends React.Component {
     this.updateCurrentlyPlaying = this.updateCurrentlyPlaying.bind(this);
     this.updateCurrentlyEditing = this.updateCurrentlyEditing.bind(this);
     this.findStoredPodcast = this.findStoredPodcast.bind(this);
+    this.updateStoredLabelledSections =
+      this.updateStoredLabelledSections.bind(this);
   }
 
   /**
@@ -56,6 +58,29 @@ class App extends React.Component {
    * @param {*} storedPodcasts
    */
   updateStoredPodcasts(storedPodcasts) {
+    this.setState({
+      storedPodcasts: storedPodcasts,
+    });
+  }
+
+  /**
+   * Update the labelled sections in storage
+   * @param {string} podcastSlug
+   * @param {string} episodeNumber
+   * @param {Array} sections
+   */
+  async updateStoredLabelledSections(podcastSlug, episodeNumber, sections) {
+    console.log(podcastSlug, episodeNumber, sections);
+    const storedPodcasts = this.state.storedPodcasts;
+    const podcastIndex = storedPodcasts.findIndex(function(podcast) {
+      return podcast.slug == podcastSlug;
+    });
+    const episodeIndex =
+      storedPodcasts[podcastIndex].episodes.findIndex(function(episode) {
+        return episode.number == episodeNumber;
+      });
+    storedPodcasts[podcastIndex].episodes[episodeIndex].sections = sections;
+    await window.podcastStorage.updatePodcastInfoDataFile(storedPodcasts);
     this.setState({
       storedPodcasts: storedPodcasts,
     });
@@ -145,6 +170,8 @@ class App extends React.Component {
               updateDisplayedSection={this.updateDisplayedSection}
               updateCurrentlyEditing={this.updateCurrentlyEditing}
               currentlyEditing={this.state.currentlyEditing}
+              updateStoredLabelledSections=
+                {this.updateStoredLabelledSections}
             />
           </div>
         </div>

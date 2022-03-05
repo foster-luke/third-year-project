@@ -22,6 +22,8 @@ class SectionLabelling extends React.Component {
       sections,
     };
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSaveSectionsButtonClick =
+      this.handleSaveSectionsButtonClick.bind(this);
     this.handleNewSectionButtonClick =
       this.handleNewSectionButtonClick.bind(this);
   }
@@ -57,6 +59,20 @@ class SectionLabelling extends React.Component {
     this.setState({
       sections: sections,
     });
+  }
+
+  /**
+   *
+   * @param {*} e
+   */
+  handleSaveSectionsButtonClick(e) {
+    e.preventDefault();
+    this.props.updateStoredLabelledSections(
+        this.props.podcast.slug,
+        this.props.podcast.episode.number,
+        this.state.sections,
+    );
+    this.props.updateDisplayedSection('EpisodesListings');
   }
 
   /**
@@ -118,6 +134,7 @@ class SectionLabelling extends React.Component {
               type="submit"
               className="btn btnGrey"
               id="saveLabelledSections"
+              onClick={this.handleSaveSectionsButtonClick}
             >
             Save Labelled Sections
             </button>
@@ -141,6 +158,8 @@ class SectionLabelling extends React.Component {
 
 SectionLabelling.propTypes = {
   podcast: PropTypes.object.isRequired,
+  updateStoredLabelledSections: PropTypes.func.isRequired,
+  updateDisplayedSection: PropTypes.func.isRequired,
 };
 
 export default SectionLabelling;

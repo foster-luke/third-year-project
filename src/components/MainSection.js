@@ -45,6 +45,9 @@ class MainSection extends React.Component {
         displayedSection =
           <SectionLabelling
             podcast={this.props.currentlyEditing}
+            updateStoredLabelledSections=
+              {this.props.updateStoredLabelledSections}
+            updateDisplayedSection={this.props.updateDisplayedSection}
           />;
         break;
 
@@ -66,6 +69,7 @@ MainSection.propTypes = {
   updateCurrentlyPlaying: PropTypes.func.isRequired,
   updateCurrentlyEditing: PropTypes.func.isRequired,
   updateDisplayedSection: PropTypes.func.isRequired,
+  updateStoredLabelledSections: PropTypes.func.isRequired,
   currentlyEditing: PropTypes.object,
 };
 
