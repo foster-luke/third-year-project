@@ -67,10 +67,15 @@ class SectionLabelling extends React.Component {
    */
   handleSaveSectionsButtonClick(e) {
     e.preventDefault();
+    let sections = this.state.sections;
+    // Remove unused sections
+    sections = sections.filter(function(section) {
+      return section.start != '' && section.end != '';
+    });
     this.props.updateStoredLabelledSections(
         this.props.podcast.slug,
         this.props.podcast.episode.number,
-        this.state.sections,
+        sections,
     );
     this.props.updateDisplayedSection('EpisodesListings');
   }
