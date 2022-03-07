@@ -1,17 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import * as tf from '@tensorflow/tfjs';
 
 /**
- * TensorFlow component
+ * Main Section component
  */
-class TensorFlow extends React.Component {
+class ModelTraining extends React.Component {
   /**
    * @param {*} props
    */
   constructor(props) {
     super(props);
-    this.state = {modelTrainingResults: ''};
-
+    this.state = {};
     this.trainModel = this.trainModel.bind(this);
   }
 
@@ -30,23 +30,25 @@ class TensorFlow extends React.Component {
     const ys = tf.tensor2d([1, 3, 5, 7], [4, 1]);
 
     // Train the model using the data.
-    model.fit(xs, ys, {epochs: 100}).then(() => {
+    model.fit(xs, ys, {epochs: 10000}).then(() => {
       /**
        * Use the model to do inference on a data point the model hasn't
        * seen before:
        */
       this.setState({
         modelTrainingResults:
-          model.predict(tf.tensor2d([5], [1, 1])).toString(),
+          model.predict(tf.tensor2d([9], [1, 1])).toString(),
       });
     });
   }
+
 
   /**
    * @return {string}
    */
   render() {
     return <>
+      {this.props.podcast.name}
       <button className="btn btn-primary" onClick={this.trainModel}>
                 Train Model
       </button>
@@ -55,4 +57,8 @@ class TensorFlow extends React.Component {
   }
 }
 
-export default TensorFlow;
+ModelTraining.propTypes = {
+  podcast: PropTypes.object.isRequired,
+};
+
+export default ModelTraining;

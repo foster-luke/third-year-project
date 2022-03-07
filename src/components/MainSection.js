@@ -3,6 +3,7 @@ import EpisodesListings from './EpisodesListings';
 import EpisodeUpload from './EpisodeUpload';
 import PropTypes from 'prop-types';
 import SectionLabelling from './SectionLabelling';
+import ModelTraining from './ModelTraining';
 
 /**
  * Main Section component
@@ -39,6 +40,11 @@ class MainSection extends React.Component {
             updateStoredPodcasts={this.props.updateStoredPodcasts}
             storedPodcasts={this.props.storedPodcasts}
           />;
+        break;
+
+      case 'ModelTraining':
+        displayedSection =
+          <ModelTraining podcast={this.props.selectedPodcast} />;
         break;
 
       case 'SectionLabelling':

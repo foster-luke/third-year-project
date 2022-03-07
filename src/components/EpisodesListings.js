@@ -11,6 +11,8 @@ class EpisodesListings extends React.Component {
   constructor(props) {
     super(props);
     this.handleEpisodeClick = this.handleEpisodeClick.bind(this);
+    this.handleTrainModelButtonClick =
+      this.handleTrainModelButtonClick.bind(this);
     this.handleLabelSectionsButtonClick =
       this.handleLabelSectionsButtonClick.bind(this);
   }
@@ -56,8 +58,18 @@ class EpisodesListings extends React.Component {
           {this.props.podcast.name}
         </div>
         <div className="col-6" id="podcastDetails">
-                    Genre: {this.props.podcast.genre} <br />
-                    Hosts: {this.props.podcast.hosts} <br />
+          Genre: {this.props.podcast.genre} <br />
+          Hosts: {this.props.podcast.hosts} <br />
+          <button
+            className='btn btnGrey'
+            onClick=
+              {
+                (e) =>
+                  this.handleTrainModelButtonClick(e)
+              }
+          >
+            Train Model
+          </button>
         </div>
       </div>
       {episodes}
@@ -75,6 +87,15 @@ class EpisodesListings extends React.Component {
       episodeName: episode.name,
       podcastName: podcastName,
     });
+  }
+
+  /**
+   *
+   * @param {*} e
+   */
+  handleTrainModelButtonClick(e) {
+    e.preventDefault();
+    this.props.updateDisplayedSection('ModelTraining');
   }
 
   /**
