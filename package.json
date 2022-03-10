@@ -92,6 +92,7 @@
   "dependencies": {
     "@babel/preset-env": "^7.16.11",
     "@tensorflow/tfjs": "^3.13.0",
+    "@tensorflow/tfjs-vis": "^1.5.1",
     "@testing-library/jest-dom": "^5.16.2",
     "babel-jest": "^27.5.1",
     "bootstrap": "^5.1.3",
