@@ -12,19 +12,24 @@ ffmpeg.setFfmpegPath(ffmpegPath);
 const wav = require('node-wav');
 const {getAudioDurationInSeconds} = require('get-audio-duration');
 
-async function run() {
+// train();
+// processPodcastFile();
+
+async function processPodcastFile() {
   const tempFileDir = './assets/podcasts/data_tmp';
   const wavFile = convertToWav('my_brother_my_brother_me-595-ep_595-9f67b7', '.mp3', './assets/podcasts');
 
   const length = await getAudioDurationInSeconds('./assets/podcasts/my_brother_my_brother_me-595-ep_595-9f67b7.mp3').then((duration) => {
     return parseInt(duration);
   });
-  console.log(length);
-  let averages = splitAudioFile(wavFile, tempFileDir, length);
-  // train();
+  // length = 501;
+  let averages = [];
+  for (let i = 0; i < length; i += 500) {
+    let localAverages = await splitAudioFile(wavFile.clone(), tempFileDir, i, length);
+    averages = averages.concat(localAverages);
+  }
+  saveSampleDataToFile(averages, './data/sample_data/data.json');
 }
-
-run();
 
 function convertToWav(fileName, fileExt, filePathDir) {
   const filePath = filePathDir + '/' + fileName + fileExt;
@@ -32,10 +37,13 @@ function convertToWav(fileName, fileExt, filePathDir) {
   return file;
 }
 
-async function splitAudioFile(wavFile, tempFileDir, length) {
+function splitAudioFile(wavFile, tempFileDir, startLength, endLength) {
+  if (startLength + 500 < endLength) endLength = startLength + 500;
+  console.log(startLength);
+  console.log(endLength);
   let splitPromise = new Promise((resolve, reject) => {
     wavFile.on('end', resolve);
-    for (let seek = 0; seek < 10; seek += 1) {
+    for (let seek = startLength; seek < endLength; seek += 1) {
       const filePath = tempFileDir + '/split_' + seek + '.wav';
       wavFile.output(filePath)
           .seekOutput(seek)
@@ -44,15 +52,15 @@ async function splitAudioFile(wavFile, tempFileDir, length) {
     wavFile.run();
   });
   return splitPromise.then(function(ret) {
-    averages = extractSampleData(tempFileDir + '/');
-    saveSampleDataToFile(averages, './data/sample_data/data.json');
+    averages = extractSampleData(tempFileDir, startLength, endLength);
     return averages;
   });
 }
 
-function extractSampleData(tempFileDir, length) {
+async function extractSampleData(tempFileDir, startLength, endLength) {
+  if (startLength + 500 < endLength) endLength = startLength + 500;
   let averages = [];
-  for (let seek = 0; seek < length; seek += 1) {
+  for (let seek = startLength; seek < endLength; seek += 1) {
     const filePath = tempFileDir + '/split_' + seek + '.wav';
     const buffer = fs.readFileSync(filePath);
     const result = wav.decode(buffer);
