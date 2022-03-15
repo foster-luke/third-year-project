@@ -15,9 +15,6 @@ const wav = require('node-wav');
 const tempFileDir = './assets/podcasts/data_tmp';
 const wavFile = convertToWav('my_brother_my_brother_me-595-ep_595-9f67b7', '.mp3', './assets/podcasts');
 let averages = splitAudioFile(wavFile, tempFileDir);
-// const averages = extractSampleData(tempFileDir);
-console.log(averages);
-
 
 // train();
 
@@ -36,9 +33,9 @@ function splitAudioFile(wavFile, tempFileDir) {
     wavFile.on('end', resolve);
     for (let seek = 0; seek < 10; seek += 1) {
       const filePath = tempFileDir + '/split_' + seek + '.wav';
-      wavFile.seekInput(seek)
-          .inputOptions('-t ' + 1)
-          .output(filePath);
+      wavFile.output(filePath)
+          .seekOutput(seek)
+          .duration(1);
     }
     wavFile.run();
   });
@@ -53,7 +50,6 @@ function extractSampleData(tempFileDir) {
   let averages = [];
   for (let seek = 0; seek < 10; seek += 1) {
     const filePath = tempFileDir + '/split_' + seek + '.wav';
-    console.log(filePath);
     const buffer = fs.readFileSync(filePath);
     const result = wav.decode(buffer);
     let total = 0;
