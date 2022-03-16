@@ -22,8 +22,8 @@ app.on('ready', () => {
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    'width': 1800,
-    'height': 1000,
+    'width': 1400,
+    'height': 628,
     'resizable': false,
     'autoHideMenuBar': true,
     'webPreferences': {
