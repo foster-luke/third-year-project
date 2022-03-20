@@ -18,19 +18,24 @@ train();
 // processPodcastFiles();
 
 async function processPodcastFiles() {
-  let averages = [await processPodcastFile('my_brother_my_brother_me-564-564-0b7a2e', '.mp3', './assets/podcasts/')];
-  averages.push(await processPodcastFile('my_brother_my_brother_me-580-580-e74a91', '.mp3', './assets/podcasts/'));
-  averages.push(await processPodcastFile('my_brother_my_brother_me-581-581-e96140', '.mp3', './assets/podcasts/'));
-  averages.push(await processPodcastFile('my_brother_my_brother_me-582-582-13d737', '.mp3', './assets/podcasts/'));
-  averages.push(await processPodcastFile('my_brother_my_brother_me-584-584-f688fa', '.mp3', './assets/podcasts/'));
-  averages.push(await processPodcastFile('my_brother_my_brother_me-585-585-bb7da8', '.mp3', './assets/podcasts/'));
-  averages.push(await processPodcastFile('my_brother_my_brother_me-586-586-1a9992', '.mp3', './assets/podcasts/'));
-  averages.push(await processPodcastFile('my_brother_my_brother_me-587-587-9f7b10', '.mp3', './assets/podcasts/'));
-  averages.push(await processPodcastFile('my_brother_my_brother_me-588-588-771eb1', '.mp3', './assets/podcasts/'));
-  averages.push(await processPodcastFile('my_brother_my_brother_me-590-590-cdf91b', '.mp3', './assets/podcasts/'));
-  averages.push(await processPodcastFile('my_brother_my_brother_me-595-ep_595-9f67b7', '.mp3', './assets/podcasts/'));
-  averages.push(await processPodcastFile('my_brother_my_brother_me-598-ep_598-c7ef5e', '.mp3', './assets/podcasts/'));
-  saveSampleDataToFile(averages, './data/sample_data/data.json');
+  // let averages = [await processPodcastFile('my_brother_my_brother_me-564-564-0b7a2e', '.mp3', './assets/podcasts/')];
+  // averages.push(await processPodcastFile('my_brother_my_brother_me-580-580-e74a91', '.mp3', './assets/podcasts/'));
+  // averages.push(await processPodcastFile('my_brother_my_brother_me-581-581-e96140', '.mp3', './assets/podcasts/'));
+  // averages.push(await processPodcastFile('my_brother_my_brother_me-582-582-13d737', '.mp3', './assets/podcasts/'));
+  // averages.push(await processPodcastFile('my_brother_my_brother_me-584-584-f688fa', '.mp3', './assets/podcasts/'));
+  // averages.push(await processPodcastFile('my_brother_my_brother_me-585-585-bb7da8', '.mp3', './assets/podcasts/'));
+  // averages.push(await processPodcastFile('my_brother_my_brother_me-586-586-1a9992', '.mp3', './assets/podcasts/'));
+  // averages.push(await processPodcastFile('my_brother_my_brother_me-587-587-9f7b10', '.mp3', './assets/podcasts/'));
+  // averages.push(await processPodcastFile('my_brother_my_brother_me-588-588-771eb1', '.mp3', './assets/podcasts/'));
+  // averages.push(await processPodcastFile('my_brother_my_brother_me-590-590-cdf91b', '.mp3', './assets/podcasts/'));
+  // averages.push(await processPodcastFile('my_brother_my_brother_me-595-ep_595-9f67b7', '.mp3', './assets/podcasts/'));
+  // averages.push(await processPodcastFile('my_brother_my_brother_me-598-ep_598-c7ef5e', '.mp3', './assets/podcasts/'));
+  let averages = [await processPodcastFile('fake_doctors_real_friends-524-524-0f391e', '.mp3', './assets/podcasts/')];
+  averages.push(await processPodcastFile('fake_doctors_real_friends-601-601-87f516', '.mp3', './assets/podcasts/'));
+  averages.push(await processPodcastFile('fake_doctors_real_friends-602-602-4fca67', '.mp3', './assets/podcasts/'));
+  averages.push(await processPodcastFile('fake_doctors_real_friends-603-603-983178', '.mp3', './assets/podcasts/'));
+  averages.push(await processPodcastFile('fake_doctors_real_friends-604-604-3631b2', '.mp3', './assets/podcasts/'));
+  saveSampleDataToFile(averages, './data/sample_data/data_fdrf.json');
 }
 
 async function processPodcastFile(fileName, fileExt, fileDir) {
@@ -129,7 +134,8 @@ async function getAudioFile() {
 }
 
 function getSampleData() {
-  const result = JSON.parse(fs.readFileSync('./data/sample_data/data.json'));
+  const result = JSON.parse(fs.readFileSync('./data/sample_data/data_fdrf.json')); // FDRF data
+  // const result = JSON.parse(fs.readFileSync('./data/sample_data/data_mbmbam.json')); // MBMBAM data
 
   return result;
 }
@@ -137,7 +143,8 @@ function getSampleData() {
 function getLabelledSections(filePath) {
   let labelledSections = {};
   const result = JSON.parse(fs.readFileSync('./data/podcast_info.json'));
-  let episodes = result[0].episodes;
+  // let episodes = result[0].episodes; // MBMBAM
+  let episodes = result[2].episodes; // FDRF
   labelledSections = episodes.find((episode) => episode.filePath === filePath).sections;
   labelledSections = labelledSections.map(function(section) {
     startSection = section.start.split(':');
@@ -176,15 +183,25 @@ async function train() {
       ];
     });
     samples.push(episodeSamples);
-    labelledSection = getLabelledSections(filePath)[0];
+    labelledSections = getLabelledSections(filePath);
+    episodeLabels = null;
+    labelledSections.forEach((labelledSection) => {
+      if (episodeLabels == null) {
+        // Add beginning zeros
+        episodeLabels = tf.zeros([labelledSection.startSeconds, 1]);
+      } else {
+        // Add zeros before next section
+        episodeLabels = episodeLabels.concat(tf.zeros([labelledSection.startSeconds - episodeLabels.dataSync().length, 1]));
+      }
+      // Add section ones
+      episodeLabels = episodeLabels.concat(tf.ones([labelledSection.endSeconds - labelledSection.startSeconds, 1]));
+    });
+    // Add zeros until end on samples
+    episodeLabels = episodeLabels.concat(tf.zeros([episodeSamples.length - episodeLabels.dataSync().length, 1]));
     if (labels == null) {
-      labels = tf.zeros([labelledSection.startSeconds, 1])
-          .concat(tf.ones([labelledSection.endSeconds - labelledSection.startSeconds, 1]))
-          .concat(tf.zeros([episodeSamples.length - labelledSection.endSeconds, 1]));
+      labels = episodeLabels;
     } else {
-      labels = labels.concat(tf.zeros([labelledSection.startSeconds, 1])
-          .concat(tf.ones([labelledSection.endSeconds - labelledSection.startSeconds, 1]))
-          .concat(tf.zeros([episodeSamples.length - labelledSection.endSeconds, 1])));
+      labels = labels.concat(episodeLabels);
     }
   });
   samples = [].concat.apply([], samples);
