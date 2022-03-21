@@ -222,18 +222,18 @@ async function train() {
   const output = denseLayer2.apply(denseLayer1.apply(input));
 
 
-  // Create the model based on the inputs.
-  const model = tf.sequential({
-    layers: [
-      tf.layers.dense({inputShape: [7], units: 1, activation: 'relu'}),
-      tf.layers.dense({units: 1, activation: 'relu'}),
-      tf.layers.dense({units: 1, activation: 'relu'}),
-      tf.layers.dense({units: 1, activation: 'relu'}),
-    ],
-  });
+  const model = tf.sequential();
+  model.add(tf.layers.dense({units: 250, activation: 'relu', inputShape: [7]}));
+  model.add(tf.layers.dense({units: 175, activation: 'relu'}));
+  model.add(tf.layers.dense({units: 150, activation: 'relu'}));
+  model.add(tf.layers.dense({units: 100, activation: 'relu'}));
+  model.add(tf.layers.dense({units: 50, activation: 'relu'}));
+  model.add(tf.layers.dense({units: 25, activation: 'relu'}));
+  model.add(tf.layers.dense({units: 10, activation: 'relu'}));
+  model.add(tf.layers.dense({units: 1, activation: 'softmax'}));
 
   model.compile({
-    optimizer: tf.train.adamax(),
+    optimizer: tf.train.adam(),
     loss: tf.losses.softmaxCrossEntropy,
     metrics: ['accuracy', 'precision', tf.metrics.recall, 'mse'],
   });
