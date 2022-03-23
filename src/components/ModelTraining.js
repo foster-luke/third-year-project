@@ -30,7 +30,7 @@ class ModelTraining extends React.Component {
     const ys = tf.tensor2d([1, 3, 5, 7], [4, 1]);
 
     // Train the model using the data.
-    model.fit(xs, ys, {epochs: 10000}).then(() => {
+    model.fit(xs, ys, {epochs: 100}).then(() => {
       /**
        * Use the model to do inference on a data point the model hasn't
        * seen before:
