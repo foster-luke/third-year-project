@@ -103,7 +103,9 @@ async function train(podcastSlug) {
   // Remove training data
   trainingLabels = [labels.pop()];
   trainingLabels.push(labels.pop());
+  trainingLabels.push(labels.pop());
   trainingSamples = [samples.pop()];
+  trainingSamples.push(samples.pop());
   trainingSamples.push(samples.pop());
 
   // Create tensors
@@ -114,10 +116,8 @@ async function train(podcastSlug) {
 
   // Create model layers
   const model = tf.sequential();
-  model.add(tf.layers.flatten({units: 2500, activation: 'relu', inputShape: [3982, 7]}));
+  model.add(tf.layers.flatten({units: 2500, activation: 'relu', inputShape: [longestEpisodeLength, samples[0][0].length]}));
   model.add(tf.layers.dense({units: 1750, activation: 'relu'}));
-  model.add(tf.layers.dense({units: 1500, activation: 'relu'}));
-  model.add(tf.layers.dense({units: 1000, activation: 'relu'}));
   model.add(tf.layers.dense({units: 500, activation: 'relu'}));
   model.add(tf.layers.dense({units: 250, activation: 'relu'}));
   model.add(tf.layers.dense({units: 150, activation: 'relu'}));
@@ -125,20 +125,18 @@ async function train(podcastSlug) {
   model.add(tf.layers.dense({units: 15, activation: 'relu'}));
   model.add(tf.layers.dense({units: 2, activation: 'relu'}));
 
-
   model.compile({
-    optimizer: tf.train.adam(0.0001),
+    optimizer: tf.train.adam(0.000001),
     loss: 'meanSquaredError',
     metrics: ['accuracy', tf.losses.absoluteDifference],
   });
 
   // Train model
   model.fit(data, labelledSections, {
-    epochs: 100,
+    epochs: 200,
     batchSize: 5,
   }).then((info) => {
     // Post training tasks
-    console.log(info);
     console.log(trainingLabels);
     let predictions = model.predict(trainingData);
     predictions.print();
@@ -147,6 +145,8 @@ async function train(podcastSlug) {
     console.log('Ep 1 end Diff: ' + parseInt(Math.abs(predsArr[0][1] - trainingLabels[0][1])));
     console.log('Ep 2 start Diff: ' + parseInt(Math.abs(predsArr[1][0] - trainingLabels[1][0])));
     console.log('Ep 2 end Diff: ' + parseInt(Math.abs(predsArr[1][1] - trainingLabels[1][1])));
+    console.log('Ep 3 start Diff: ' + parseInt(Math.abs(predsArr[2][0] - trainingLabels[2][0])));
+    console.log('Ep 3 end Diff: ' + parseInt(Math.abs(predsArr[2][1] - trainingLabels[2][1])));
   });
 }
 
