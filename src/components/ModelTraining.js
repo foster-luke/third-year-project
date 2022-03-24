@@ -68,7 +68,7 @@ class ModelTraining extends React.Component {
     // Pad the end of the sample data for each
     // episode to match longest podcast length
     samples = samples.map(function(episodeSamples) {
-      for (let i = episodeSamples.length; i < 3982; i++) {
+      for (let i = episodeSamples.length; i < longestEpisodeLength; i++) {
         episodeSamples.push([i, 0, 0, 0, 0, 0, 0]);
       }
       return episodeSamples;
