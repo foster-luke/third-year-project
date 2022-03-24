@@ -4,6 +4,9 @@ const fs = require('fs');
 const fsPromises = require('fs').promises;
 const {default: installExtension, REACT_DEVELOPER_TOOLS} =
   require('electron-devtools-installer');
+// const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+// const ffmpeg = require('fluent-ffmpeg');
+// ffmpeg.setFfmpegPath(ffmpegPath);
 
 let mainWindow;
 
@@ -13,11 +16,11 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-app.on('ready', () => {
-  installExtension(REACT_DEVELOPER_TOOLS)
-      .then((name) => console.log(`Added Extension:  ${name}`))
-      .catch((err) => console.log('An error occurred: ', err));
-});
+// app.on('ready', () => {
+//   installExtension(REACT_DEVELOPER_TOOLS)
+//       .then((name) => console.log(`Added Extension:  ${name}`))
+//       .catch((err) => console.log('An error occurred: ', err));
+// });
 
 const createWindow = () => {
   // Create the browser window.
@@ -188,3 +191,95 @@ ipcMain.handle('getPodcast', async (event, filePath) => {
 
   return result;
 });
+
+ipcMain.handle('getLabelledEpisodes', async (event, podcastSlug) => {
+  const result = getLabelledEpisodes(podcastSlug);
+
+  return result;
+});
+
+ipcMain.handle('getSampleData', async (event, podcastSlug, episodeNumber) => {
+  const result = getSampleData(podcastSlug, episodeNumber);
+
+  return result;
+});
+
+/**
+   * Get the sample data for the given podcast episode
+   * @param {string} podcastSlug
+   * @param {number} episodeNumber
+   * @return {array}
+   */
+function getSampleData(podcastSlug, episodeNumber) {
+  const storedEpisodeSampleData =
+      JSON.parse(
+          fs.readFileSync(
+              './data/sample_data/' +
+            podcastSlug +
+            '/' +
+            episodeNumber +
+            '.json',
+          ),
+      );
+  episodeSampleData = [];
+  // Extract sample data into usable array
+  storedEpisodeSampleData.forEach((sample) => {
+    episodeSampleData.push([
+      sample.time,
+      sample.lowest,
+      sample.lowerQuartile,
+      sample.mean,
+      sample.median,
+      sample.upperQuartile,
+      sample.highest,
+    ]);
+  });
+  return episodeSampleData;
+}
+
+/**
+   * Get all the labelled episodes for a given podcast
+   * @param {string} podcastSlug
+   * @return {array}
+   */
+function getLabelledEpisodes(podcastSlug) {
+  // Get all podcasts data
+  const result = JSON.parse(fs.readFileSync('./data/podcast_info.json'));
+
+  // Get the data of a specific podcast
+  const episodes =
+      result.find((podcast) => podcast.slug === podcastSlug).episodes;
+
+  // Extract the needed data for each episode
+  const labelledEpisodes = [];
+  episodes.forEach((episode) => {
+    // Get the labelled sections
+    const sections = [];
+    episode.sections.forEach((section) => {
+      startSection = section.start.split(':');
+      endSection = section.end.split(':');
+      startSeconds =
+          parseInt(startSection[startSection.length - 3] ?? 0) * 60 * 60 +
+          parseInt(startSection[startSection.length - 2]) * 60 +
+          parseInt(startSection[startSection.length - 1]);
+
+      endSeconds =
+          parseInt(endSection[startSection.length - 3] ?? 0) * 60 * 60 +
+          parseInt(endSection[endSection.length - 2]) * 60 +
+          parseInt(endSection[endSection.length - 1]);
+
+      sections.push(
+          {
+            startSeconds: startSeconds,
+            endSeconds: endSeconds,
+          },
+      );
+    });
+
+    labelledEpisodes.push({
+      number: episode.number,
+      sections: sections,
+    });
+  });
+  return labelledEpisodes;
+}

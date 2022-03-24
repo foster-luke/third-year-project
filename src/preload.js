@@ -36,3 +36,18 @@ contextBridge.exposeInMainWorld('mediaControls', {
     });
   },
 });
+
+contextBridge.exposeInMainWorld('machineLearning', {
+  getLabelledEpisodes: async (podcastSlug) => {
+    return ipcRenderer.invoke('getLabelledEpisodes', podcastSlug)
+        .then((result) => {
+          return result;
+        });
+  },
+  getSampleData: async (podcastSlug, episodeNumber) => {
+    return ipcRenderer.invoke('getSampleData', podcastSlug, episodeNumber)
+        .then((result) => {
+          return result;
+        });
+  },
+});
