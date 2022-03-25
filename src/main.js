@@ -2,11 +2,6 @@ const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
 const fs = require('fs');
 const fsPromises = require('fs').promises;
-const {default: installExtension, REACT_DEVELOPER_TOOLS} =
-  require('electron-devtools-installer');
-// const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
-// const ffmpeg = require('fluent-ffmpeg');
-// ffmpeg.setFfmpegPath(ffmpegPath);
 
 let mainWindow;
 
@@ -16,16 +11,11 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-// app.on('ready', () => {
-//   installExtension(REACT_DEVELOPER_TOOLS)
-//       .then((name) => console.log(`Added Extension:  ${name}`))
-//       .catch((err) => console.log('An error occurred: ', err));
-// });
 
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    'width': 1400,
+    'width': 800,
     'height': 628,
     'resizable': false,
     'autoHideMenuBar': true,
@@ -36,9 +26,6 @@ const createWindow = () => {
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
