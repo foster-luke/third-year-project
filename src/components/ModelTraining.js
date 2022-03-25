@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import * as tf from '@tensorflow/tfjs';
 
 /**
- * Main Section component
+ * Model training component
  */
 class ModelTraining extends React.Component {
   /**
@@ -16,7 +16,8 @@ class ModelTraining extends React.Component {
   }
 
   /**
-   *
+   * Custom asynchronous foreach function
+   * Credit to https://codeburst.io/javascript-async-await-with-foreach-b6ba62bbf404
    * @param {*} array
    * @param {*} callback
    */
@@ -31,7 +32,7 @@ class ModelTraining extends React.Component {
    * @return {*}
    */
   async trainModel() {
-    const podcastSlug = 'my_brother_my_brother_me';
+    const podcastSlug = this.props.podcast.slug;
 
     // Get labelled episodes
     const labelledEpisodes =

@@ -95,6 +95,8 @@ class EpisodeDetails extends React.Component {
       this.setState({podcastSlugAlert: true});
       return false;
     }
+
+    // Add new podcast to list of podcasts
     podcasts.push({
       name: this.state.podcastName,
       slug: slug,
@@ -102,8 +104,12 @@ class EpisodeDetails extends React.Component {
       genre: this.state.podcastGenre,
       episodes: [],
     });
+
+    // Save podcast to storage
     await window.podcastStorage.updatePodcastInfoDataFile(podcasts);
     this.props.updateStoredPodcasts(podcasts);
+
+    // Set selected podcast to new podcast
     this.setState({
       selectedPodcastSlug: slug,
       podcastSlugAlert: false,

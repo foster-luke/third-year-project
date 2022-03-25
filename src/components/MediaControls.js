@@ -39,6 +39,8 @@ class MediaControls extends React.Component {
    * @param {*} prevProps
    */
   componentDidUpdate(prevProps) {
+    // If the currently playing episode has changed,
+    // unload the old one and load the new one
     if (
       this.props.currentlyPlaying.filePath != null &&
       this.
@@ -59,6 +61,7 @@ class MediaControls extends React.Component {
    * @return {Howl}
    */
   async getCurrentlyPlayingFile(filePath) {
+    // Get podcast from storage and create new audio player with it
     const blob = await window.mediaControls.getPodcast(filePath);
     const sound = await new Howl({
       src: ['data:audio/mp3;base64,' + blob],

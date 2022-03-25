@@ -3,7 +3,7 @@ import EpisodeDetails from './EpisodeDetails';
 import PropTypes from 'prop-types';
 
 /**
- *
+ * Episode upload component
  */
 class EpisodeUpload extends React.Component {
   /**
@@ -59,6 +59,7 @@ class EpisodeUpload extends React.Component {
   }
 
   /**
+   * Prevent dragover event from doing anything
    * @param {*} e
    */
   handleFileDragOver(e) {
@@ -67,21 +68,21 @@ class EpisodeUpload extends React.Component {
   }
 
   /**
-   *
-   * @param {*} tmpFileName
-   * @param {*} newFileName
+   * Move temp episode file to permanent storage
+   * @param {string} tmpFileName
+   * @param {string} newFileName
    */
   async moveTempEpisodeFile(tmpFileName, newFileName) {
-    // Save to temp storage
+    // Move to permant storage
     const res =
       await window.podcastStorage.moveToPermStorage(tmpFileName, newFileName);
     return res;
   }
 
   /**
-   *
-   * @param {*} tmpFileName
-   * @param {*} newFileName
+   *  If more than one file is uploaded, switch to the next one in the list
+   * @param {string} tmpFileName
+   * @param {string} newFileName
    */
   async moveToNextUploadedFile() {
     const uploadedFiles = this.state.uploadedFiles;

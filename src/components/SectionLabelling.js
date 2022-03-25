@@ -62,7 +62,7 @@ class SectionLabelling extends React.Component {
   }
 
   /**
-   *
+   * Save sections event handler
    * @param {*} e
    */
   handleSaveSectionsButtonClick(e) {
@@ -143,17 +143,6 @@ class SectionLabelling extends React.Component {
             >
             Save Labelled Sections
             </button>
-          </div>
-          <div className="col-sm-6">
-            {/* <div
-              className={'alert alert-danger py-0 ' +
-                (this.state.podcastSlugAlert ? '' : 'invisible')
-              }
-              id="podcastSelectAlert"
-              role="alert"
-            >
-              This name is already in use
-            </div> */}
           </div>
         </div>
       </form>
