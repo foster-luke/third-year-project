@@ -32,6 +32,9 @@ class ModelTraining extends React.Component {
    * @return {*}
    */
   async trainModel() {
+    this.setState({
+      modelTrainingResults: 'Loading...',
+    });
     const podcastSlug = this.props.podcast.slug;
 
     // Get labelled episodes
@@ -99,19 +102,27 @@ class ModelTraining extends React.Component {
 
     model.compile({
       optimizer: tf.train.adamax(0.000001),
-      loss: 'meanSquaredError',
-      metrics: ['accuracy', tf.losses.absoluteDifference],
+      loss: tf.losses.absoluteDifference,
+      metrics: ['accuracy'],
     });
 
     // Train model
+    const numberOfEpochs = 200;
     model.fit(data, labelledSections, {
-      epochs: 200,
+      epochs: numberOfEpochs,
       batchSize: 6,
+      callbacks: {
+        onEpochEnd: (epoch, logs) =>
+          this.setState({
+            modelTrainingResults: '\nCurrent Epoch:' + epoch +
+              '/' + numberOfEpochs +
+              ' Current Loss:' + JSON.stringify(logs.loss),
+          }),
+      },
     }).then((info) => {
-    // Post training tasks
-      console.log(info);
+      // Post training tasks
       this.setState({
-        modelTrainingResults: JSON.stringify(info),
+        modelTrainingResults: 'Final Loss: ' + info.history.loss.pop(),
       });
     });
     return true;
@@ -123,10 +134,10 @@ class ModelTraining extends React.Component {
    */
   render() {
     return <>
-      {this.props.podcast.name}
+      {this.props.podcast.name}<br/>
       <button className="btn btn-primary" onClick={this.trainModel}>
                 Train Model
-      </button>
+      </button><br/>
       <span>{this.state.modelTrainingResults}</span>
     </>;
   }
