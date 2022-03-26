@@ -95,7 +95,7 @@ async function train(podcastSlug) {
   // Pad the end of the sample data for each episode to match longest podcast length
   samples = samples.map(function(episodeSamples) {
     for (let i = episodeSamples.length; i < longestEpisodeLength; i++) {
-      episodeSamples.push([i, 0, 0, 0, 0, 0, 0]);
+      episodeSamples.push([0, 0, 0, 0, 0, 0, 0]);
     }
     return episodeSamples;
   });
@@ -126,15 +126,15 @@ async function train(podcastSlug) {
   model.add(tf.layers.dense({units: 2, activation: 'relu'}));
 
   model.compile({
-    optimizer: tf.train.adam(0.000001),
+    optimizer: tf.train.adamax(0.00001),
     loss: 'meanSquaredError',
     metrics: ['accuracy', tf.losses.absoluteDifference],
   });
 
   // Train model
   model.fit(data, labelledSections, {
-    epochs: 200,
-    batchSize: 5,
+    epochs: 500,
+    batchSize: 6,
   }).then((info) => {
     // Post training tasks
     console.log(trainingLabels);

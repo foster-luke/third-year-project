@@ -70,7 +70,7 @@ class ModelTraining extends React.Component {
     // episode to match longest podcast length
     samples = samples.map(function(episodeSamples) {
       for (let i = episodeSamples.length; i < longestEpisodeLength; i++) {
-        episodeSamples.push([i, 0, 0, 0, 0, 0, 0]);
+        episodeSamples.push([0, 0, 0, 0, 0, 0, 0]);
       }
       return episodeSamples;
     });
@@ -98,15 +98,15 @@ class ModelTraining extends React.Component {
     model.add(tf.layers.dense({units: 2, activation: 'relu'}));
 
     model.compile({
-      optimizer: tf.train.adam(0.000001),
+      optimizer: tf.train.adamax(0.000001),
       loss: 'meanSquaredError',
       metrics: ['accuracy', tf.losses.absoluteDifference],
     });
 
     // Train model
     model.fit(data, labelledSections, {
-      epochs: 20,
-      batchSize: 5,
+      epochs: 200,
+      batchSize: 6,
     }).then((info) => {
     // Post training tasks
       console.log(info);
