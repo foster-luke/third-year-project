@@ -11,12 +11,25 @@ ffmpeg.setFfmpegPath(ffmpegPath);
 const wav = require('node-wav');
 const {getAudioDurationInSeconds} = require('get-audio-duration');
 
-processPodcastFiles();
+// Get podcast episode details from command arguments
+const myArgs = process.argv.slice(2);
+if (myArgs[0] === undefined) {
+  throw new Error('Please add a podcast slug to your node command');
+}
+if (myArgs[1] === undefined) {
+  throw new Error('Please add a episode number to your node command');
+}
+if (myArgs[2] === undefined) {
+  throw new Error('Please add a file name to your node command, e.g. \'my_brother_my_brother_me-564-564-0b7a2e\'');
+}
+const podcastSlug = myArgs[0]; // 'my_brother_my_brother_me'
+const episodeNumber = myArgs[1]; // 564
+const fileName = myArgs[2]; // 'my_brother_my_brother_me-564-564-0b7a2e'
 
-async function processPodcastFiles() {
-  let podcastSlug = 'my_brother_my_brother_me';
-  let episodeNumber = 564;
-  let averages = await processPodcastFile('my_brother_my_brother_me-564-564-0b7a2e', '.mp3', './assets/podcasts/');
+processPodcastFiles(podcastSlug, episodeNumber, fileName);
+
+async function processPodcastFiles(podcastSlug, episodeNumber, fileName) {
+  let averages = await processPodcastFile(fileName, '.mp3', './assets/podcasts/');
   saveSampleDataToFile(averages, './data/sample_data/' + podcastSlug, '/' + episodeNumber + '.json');
 }
 

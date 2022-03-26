@@ -10,6 +10,13 @@ const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
 
+// Get podcast slug from command arguments
+const myArgs = process.argv.slice(2);
+if (myArgs[0] === undefined) {
+  throw new Error('Please add a podcast slug to your node command');
+}
+const podcastSlug = myArgs[0];
+
 train('my_brother_my_brother_me');
 
 function getSampleData(podcastSlug, episodeNumber) {
