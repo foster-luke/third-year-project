@@ -17,7 +17,7 @@ async function processPodcastFiles() {
   let podcastSlug = 'my_brother_my_brother_me';
   let episodeNumber = 564;
   let averages = await processPodcastFile('my_brother_my_brother_me-564-564-0b7a2e', '.mp3', './assets/podcasts/');
-  saveSampleDataToFile(averages, './data/sample_data/' + podcastSlug + '/' + episodeNumber + '.json');
+  saveSampleDataToFile(averages, './data/sample_data/' + podcastSlug, '/' + episodeNumber + '.json');
 }
 
 async function processPodcastFile(fileName, fileExt, fileDir) {
@@ -44,6 +44,9 @@ function convertToWav(fileName, fileExt, filePathDir) {
 }
 
 function splitAudioFile(wavFile, tempFileDir, startLength, endLength, filePath) {
+  if (!fs.existsSync(tempFileDir)) {
+    fs.mkdirSync(tempFileDir, {recursive: true});
+  }
   if (startLength + 500 < endLength) endLength = startLength + 500;
   console.log(startLength);
   console.log(endLength);
@@ -94,6 +97,10 @@ function deleteTempFile(filePath) {
   fs.rmSync(filePath);
 }
 
-function saveSampleDataToFile(data, filePath) {
-  fs.writeFileSync(filePath, JSON.stringify(data));
+function saveSampleDataToFile(data, dir, fileName) {
+  // If the data directory does not exist then create it
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, {recursive: true});
+  }
+  fs.writeFileSync(dir + fileName, JSON.stringify(data));
 }
