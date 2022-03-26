@@ -17,7 +17,7 @@ if (myArgs[0] === undefined) {
 }
 const podcastSlug = myArgs[0];
 
-train('my_brother_my_brother_me');
+train(podcastSlug);
 
 function getSampleData(podcastSlug, episodeNumber) {
   const storedEpisodeSampleData = JSON.parse(fs.readFileSync('./data/sample_data/' + podcastSlug + '/' + episodeNumber + '.json'));
@@ -108,18 +108,18 @@ async function train(podcastSlug) {
   });
 
   // Remove training data
-  trainingLabels = [labels.pop()];
-  trainingLabels.push(labels.pop());
-  trainingLabels.push(labels.pop());
-  trainingSamples = [samples.pop()];
-  trainingSamples.push(samples.pop());
-  trainingSamples.push(samples.pop());
+  // trainingLabels = [labels.pop()];
+  // trainingLabels.push(labels.pop());
+  // trainingLabels.push(labels.pop());
+  // trainingSamples = [samples.pop()];
+  // trainingSamples.push(samples.pop());
+  // trainingSamples.push(samples.pop());
 
   // Create tensors
   labelledSections = tf.tensor2d(labels);
-  trainingLabelledSections = tf.tensor2d(trainingLabels);
+  // trainingLabelledSections = tf.tensor2d(trainingLabels);
   const data = tf.tensor3d(samples);
-  const trainingData = tf.tensor3d(trainingSamples);
+  // const trainingData = tf.tensor3d(trainingSamples);
 
   // Create model layers
   const model = tf.sequential();
@@ -144,16 +144,16 @@ async function train(podcastSlug) {
     batchSize: 6,
   }).then((info) => {
     // Post training tasks
-    console.log(trainingLabels);
-    let predictions = model.predict(trainingData);
-    predictions.print();
-    predsArr = predictions.arraySync();
-    console.log('Ep 1 start Diff: ' + parseInt(Math.abs(predsArr[0][0] - trainingLabels[0][0])));
-    console.log('Ep 1 end Diff: ' + parseInt(Math.abs(predsArr[0][1] - trainingLabels[0][1])));
-    console.log('Ep 2 start Diff: ' + parseInt(Math.abs(predsArr[1][0] - trainingLabels[1][0])));
-    console.log('Ep 2 end Diff: ' + parseInt(Math.abs(predsArr[1][1] - trainingLabels[1][1])));
-    console.log('Ep 3 start Diff: ' + parseInt(Math.abs(predsArr[2][0] - trainingLabels[2][0])));
-    console.log('Ep 3 end Diff: ' + parseInt(Math.abs(predsArr[2][1] - trainingLabels[2][1])));
+    // console.log(trainingLabels);
+    // let predictions = model.predict(trainingData);
+    // predictions.print();
+    // predsArr = predictions.arraySync();
+    // console.log('Ep 1 start Diff: ' + parseInt(Math.abs(predsArr[0][0] - trainingLabels[0][0])));
+    // console.log('Ep 1 end Diff: ' + parseInt(Math.abs(predsArr[0][1] - trainingLabels[0][1])));
+    // console.log('Ep 2 start Diff: ' + parseInt(Math.abs(predsArr[1][0] - trainingLabels[1][0])));
+    // console.log('Ep 2 end Diff: ' + parseInt(Math.abs(predsArr[1][1] - trainingLabels[1][1])));
+    // console.log('Ep 3 start Diff: ' + parseInt(Math.abs(predsArr[2][0] - trainingLabels[2][0])));
+    // console.log('Ep 3 end Diff: ' + parseInt(Math.abs(predsArr[2][1] - trainingLabels[2][1])));
   });
 }
 
