@@ -88,7 +88,7 @@ class App extends React.Component {
 
   /**
    *
-   * @param {*} section
+   * @param {string} section
    */
   updateDisplayedSection(section) {
     this.setState({

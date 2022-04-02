@@ -85,7 +85,7 @@ ipcMain.handle('uploadFileToTemp', async (event, filePath) => {
   return result;
 });
 
-// Move podcast file from temp to permancent storage
+// Move podcast file from temp to permanent storage
 ipcMain.handle('moveTempPodcastToStorage',
     async (event, tmpFileName, permFileName) => {
       const dir = './assets/podcasts/';
