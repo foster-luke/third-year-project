@@ -50,4 +50,14 @@ contextBridge.exposeInMainWorld('machineLearning', {
           return result;
         });
   },
+  splitAudioFile: async (podcastSlug, episodeNumber, filePath) => {
+    return ipcRenderer.send(
+        'splitAudioFile', podcastSlug, episodeNumber, filePath,
+    );
+  },
+});
+
+// Handle messages from file splitting process
+ipcRenderer.on('fileSplitReply', (event, res) => {
+  console.log(res);
 });

@@ -2,6 +2,7 @@ const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
 const fs = require('fs');
 const fsPromises = require('fs').promises;
+const cp = require('child_process');
 
 let mainWindow;
 
@@ -15,7 +16,7 @@ if (require('electron-squirrel-startup')) {
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    'width': 800,
+    'width': 1400,
     'height': 628,
     'resizable': false,
     'autoHideMenuBar': true,
@@ -26,6 +27,9 @@ const createWindow = () => {
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+
+  // Open the DevTools.
+  mainWindow.webContents.openDevTools();
 };
 
 // This method will be called when Electron has finished
@@ -191,6 +195,14 @@ ipcMain.handle('getSampleData', async (event, podcastSlug, episodeNumber) => {
   return result;
 });
 
+ipcMain.on(
+    'splitAudioFile', async (event, podcastSlug, episodeNumber, filePath) => {
+      const result =
+      splitAudioFile(event, podcastSlug, episodeNumber, filePath);
+
+      return result;
+    });
+
 /**
    * Get the sample data for the given podcast episode
    * @param {string} podcastSlug
@@ -269,4 +281,23 @@ function getLabelledEpisodes(podcastSlug) {
     });
   });
   return labelledEpisodes;
+}
+
+/**
+ * Split podcast audio file for use within machine learning model
+ * @param {*} event
+ * @param {string} podcastSlug
+ * @param {number} episodeNumber
+ * @param {string} filePath
+ */
+function splitAudioFile(event, podcastSlug, episodeNumber, filePath) {
+  const child =
+    cp.fork(
+        path.resolve(__dirname, '../splitAudioFile.js'),
+        [podcastSlug, episodeNumber, filePath],
+    );
+
+  child.on('message', (res) => {
+    event.reply('fileSplitReply', res);
+  });
 }

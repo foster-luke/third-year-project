@@ -31,6 +31,10 @@ processPodcastFiles(podcastSlug, episodeNumber, fileName);
 async function processPodcastFiles(podcastSlug, episodeNumber, fileName) {
   let averages = await processPodcastFile(fileName, '.mp3', './assets/podcasts/');
   saveSampleDataToFile(averages, './data/sample_data/' + podcastSlug, '/' + episodeNumber + '.json');
+
+  process.send({
+    status: 'success',
+  });
 }
 
 async function processPodcastFile(fileName, fileExt, fileDir) {
@@ -38,7 +42,7 @@ async function processPodcastFile(fileName, fileExt, fileDir) {
   const filePath = fileDir + fileName + fileExt;
   const wavFile = convertToWav(fileName, fileExt, fileDir);
 
-  const length = await getAudioDurationInSeconds(fileDir + fileName + fileExt).then((duration) => {
+  let length = await getAudioDurationInSeconds(fileDir + fileName + fileExt).then((duration) => {
     return parseInt(duration);
   });
   // length = 101;
@@ -61,8 +65,12 @@ function splitAudioFile(wavFile, tempFileDir, startLength, endLength, filePath) 
     fs.mkdirSync(tempFileDir, {recursive: true});
   }
   if (startLength + 500 < endLength) endLength = startLength + 500;
-  console.log(startLength);
-  console.log(endLength);
+
+  process.send({
+    status: 'processing',
+    startLength: startLength,
+    endLength: endLength,
+  });
   let splitPromise = new Promise((resolve, reject) => {
     wavFile.on('end', resolve);
     for (let seek = startLength; seek < endLength; seek += 1) {

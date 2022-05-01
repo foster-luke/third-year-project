@@ -46,7 +46,7 @@ class EpisodeDetails extends React.Component {
       this.slugify(this.state.episodeName);
 
     // Move temp file
-    filename = await this.props.moveTempEpisodeFile(
+    const filePath = await this.props.moveTempEpisodeFile(
         this.props.tempFileLocation, filename,
     );
 
@@ -58,12 +58,24 @@ class EpisodeDetails extends React.Component {
     storedPodcasts[podcastIndex].episodes.push({
       number: this.state.episodeNumber,
       name: this.state.episodeName,
-      filePath: filename,
+      filePath: filePath,
     });
     this.props.updateStoredPodcasts(storedPodcasts);
 
     // Save new podcast details to storage
     await window.podcastStorage.updatePodcastInfoDataFile(storedPodcasts);
+
+    // Get filename only from new file pathj
+    filename =
+      filePath.split('.').slice(0, -1).join('.').split('/').slice(-1)[0];
+
+    // Prepare audio file for the machine learning model
+    window.machineLearning.splitAudioFile(
+        this.state.selectedPodcastSlug,
+        this.state.episodeNumber,
+        filename,
+    );
+
     this.props.moveToNextUploadedFile();
   }
 
